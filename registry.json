@@ -3,27 +3,36 @@
     "collab-core": {
       "repo": "BuildWithCollab/collab-core",
       "registries": [
-        "xmake"
+        "xmake",
+        "vcpkg"
       ],
       "versions": [
-        "v0.1.0"
+        "v0.1.0",
+        "v0.2.0"
       ],
       "dependencies": [
         "fmt",
-        "spdlog",
-        "platformfolders"
+        "spdlog"
       ],
       "xmake-config": {
         "build_tests": false
-      }
+      },
+      "xmake-dependencies": [
+        "platformfolders"
+      ],
+      "vcpkg-dependencies": [
+        "platform-folders"
+      ]
     },
     "collab-process": {
       "repo": "BuildWithCollab/collab-process",
       "registries": [
-        "xmake"
+        "xmake",
+        "vcpkg"
       ],
       "versions": [
-        "v0.1.0"
+        "v0.1.0",
+        "v0.2.0"
       ],
       "dependencies": [
         "collab-core",
