@@ -1,0 +1,11 @@
+{
+  "packages": {
+    "collab-core": {
+      "repo": "BuildWithCollab/collab-core",
+      "versions": [
+        "v0.1.0"
+      ],
+      "registries": ["xmake"]
+    }
+  }
+}

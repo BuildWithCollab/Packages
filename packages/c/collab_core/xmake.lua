@@ -1,0 +1,8 @@
+package("collab_core")
+    set_homepage("https://github.com/BuildWithCollab/collab-core")
+    set_description("Collab Core ⚓")
+    add_urls("https://github.com/BuildWithCollab/collab-core/archive/refs/tags/$(version).tar.gz")
+    add_versions("v0.1.0", "3e7d90bf9472d9fa122d6103349c1fa970d30e30d6a909dc7d73dbc959a110b4")
+    on_install(function (package)
+        import("package.tools.cmake").install(package)
+    end)
