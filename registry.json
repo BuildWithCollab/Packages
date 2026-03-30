@@ -16,6 +16,22 @@
       "xmake-config": {
         "build_tests": false
       }
+    },
+    "collab-process": {
+      "repo": "BuildWithCollab/collab-process",
+      "registries": [
+        "xmake"
+      ],
+      "versions": [
+        "v0.1.0"
+      ],
+      "dependencies": [
+        "collab-core",
+        "fmt"
+      ],
+      "xmake-config": {
+        "build_tests": false
+      }
     }
   }
 }
