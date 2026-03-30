@@ -2,10 +2,12 @@
   "packages": {
     "collab-core": {
       "repo": "BuildWithCollab/collab-core",
+      "registries": [
+        "xmake"
+      ],
       "versions": [
         "v0.1.0"
-      ],
-      "registries": ["xmake"]
+      ]
     }
   }
 }

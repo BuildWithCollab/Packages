@@ -1,4 +1,4 @@
-package("collab_core")
+package("collab-core")
     set_homepage("https://github.com/BuildWithCollab/collab-core")
     set_description("Collab Core ⚓")
     add_urls("https://github.com/BuildWithCollab/collab-core/archive/refs/tags/$(version).tar.gz")
