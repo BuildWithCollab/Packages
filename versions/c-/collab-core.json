@@ -1,0 +1,12 @@
+{
+  "versions": [
+    {
+      "version-string": "2026-03-30-d78ff96",
+      "git-tree": "no-commit-mode"
+    },
+    {
+      "version-string": "2026-03-30-ea51523",
+      "git-tree": "47cf310998b4503e842bf772d7af70a9b95550b1"
+    }
+  ]
+}

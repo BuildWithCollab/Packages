@@ -1,0 +1,12 @@
+{
+  "default": {
+    "collab-core": {
+      "baseline": "2026-03-30-ea51523",
+      "port-version": 0
+    },
+    "collab-process": {
+      "baseline": "2026-03-30-73b1a98",
+      "port-version": 0
+    }
+  }
+}
