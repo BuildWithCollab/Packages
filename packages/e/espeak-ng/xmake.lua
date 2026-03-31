@@ -4,7 +4,7 @@ package("espeak-ng")
     set_license("GPL-3.0")
     add_urls("https://github.com/BuildWithCollab/collab-espeak-ng-fork/archive/refs/tags/$(version).tar.gz")
 -- [[ GENERATED:versions ]]
-    add_versions("2026.03.30-test1", "1eaf16e49a1d6a3c1cd7386845c6433ad9841309b8f38e69258a112484ba94b8")
+    add_versions("2026.03.30-test1", "834e2c5154f8a6c1650bffaff0c9038e9a9f162ff2cd4d247beda547213c6371")
 -- [[ /GENERATED:versions ]]
 -- [[ GENERATED:deps ]]
 -- [[ /GENERATED:deps ]]
