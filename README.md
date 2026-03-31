@@ -1,6 +1,6 @@
-# BuildWithCollab Packages
+<img src="https://raw.githubusercontent.com/BuildWithCollab/BuildWithCollab/refs/heads/main/images/logo/Collab%20512.png" align="right" />
 
-📦 xmake + vcpkg 📦
+# 📦 xmake + vcpkg 📦
 
 <!-- REGISTRY:content -->
 ## Packages <!-- omit in toc -->
