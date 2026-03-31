@@ -1,6 +1,6 @@
 package("collab-process")
     set_homepage("https://github.com/BuildWithCollab/collab-process")
-    set_description("Collab Process ▶️🖥️")
+    set_description("Collab Process ▶️")
     set_license("0BSD")
     add_urls("https://github.com/BuildWithCollab/collab-process/archive/refs/tags/$(version).tar.gz")
 -- [[ GENERATED:versions ]]
