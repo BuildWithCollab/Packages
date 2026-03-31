@@ -10,6 +10,12 @@ package("piper-phonemize")
     add_deps("espeak-ng")
     add_deps("onnxruntime")
 -- [[ /GENERATED:deps ]]
+    -- Headers contain IPA character literals that need /utf-8 on MSVC
+    if is_plat("windows") then
+        on_load(function (package)
+            package:add("cxxflags", "/utf-8")
+        end)
+    end
     on_install(function (package)
 -- [[ GENERATED:install ]]
         import("package.tools.xmake").install(package)
