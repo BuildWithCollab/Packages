@@ -8,6 +8,11 @@ package("espeak-ng")
 -- [[ /GENERATED:versions ]]
 -- [[ GENERATED:deps ]]
 -- [[ /GENERATED:deps ]]
+    -- Static library: prevent __declspec(dllimport) on Windows
+    add_defines("LIBESPEAK_NG_EXPORT=1")
+    if is_plat("windows") then
+        add_syslinks("advapi32")
+    end
     on_install(function (package)
 -- [[ GENERATED:install ]]
         import("package.tools.xmake").install(package)
