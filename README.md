@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/BuildWithCollab/BuildWithCollab/refs/heads/main/images/logo/Collab%20512.png" align="right" />
+<img src="https://raw.githubusercontent.com/BuildWithCollab/BuildWithCollab/refs/heads/main/images/logo/Collab%20512.png" width="256" align="right" />
 
 # 📦 xmake + vcpkg 📦
 
