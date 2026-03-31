@@ -7,6 +7,7 @@ package("piper-phonemize")
 -- [[ /GENERATED:versions ]]
 -- [[ GENERATED:deps ]]
     add_deps("espeak-ng")
+    add_deps("onnxruntime")
 -- [[ /GENERATED:deps ]]
     on_install(function (package)
 -- [[ GENERATED:install ]]

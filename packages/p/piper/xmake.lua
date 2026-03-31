@@ -7,9 +7,10 @@ package("piper")
 -- [[ /GENERATED:versions ]]
 -- [[ GENERATED:deps ]]
     add_deps("piper-phonemize")
+    add_deps("spdlog")
 -- [[ /GENERATED:deps ]]
     on_install(function (package)
 -- [[ GENERATED:install ]]
-        import("package.tools.xmake").install(package)
+        import("package.tools.xmake").install(package, { build_executable = false })
 -- [[ /GENERATED:install ]]
     end)

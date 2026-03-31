@@ -56,7 +56,8 @@
         "xmake"
       ],
       "dependencies": [
-        "espeak-ng"
+        "espeak-ng",
+        "onnxruntime"
       ]
     },
     "piper": {
@@ -65,8 +66,12 @@
         "xmake"
       ],
       "dependencies": [
-        "piper-phonemize"
-      ]
+        "piper-phonemize",
+        "spdlog"
+      ],
+      "xmake-config": {
+        "build_executable": false
+      }
     }
   }
 }
