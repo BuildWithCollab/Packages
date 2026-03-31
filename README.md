@@ -3,7 +3,7 @@
 📦 xmake + vcpkg 📦
 
 <!-- REGISTRY:content -->
-# Packages <!-- omit in toc -->
+## Packages <!-- omit in toc -->
 
 This is a [`vcpkg`](https://vcpkg.io/) and [`xmake`](https://xmake.io/) C++ package registry.
 
@@ -14,13 +14,13 @@ This is a [`vcpkg`](https://vcpkg.io/) and [`xmake`](https://xmake.io/) C++ pack
   - [`vcpkg`](#vcpkg)
     - [`vcpkg-configuration.json`](#vcpkg-configurationjson)
       - [Updating Baselines](#updating-baselines)
-    - [`vcpkg.json`](#vcpkgjson)
+    - [`vcpkg.json`](#vcpkg-json)
 
 ---
 
-# Build Tool Configuration
+## Build Tool Configuration
 
-## `xmake`
+### `xmake`
 
 - [`collab-core`](https://github.com/BuildWithCollab/collab-core)
 - [`collab-process`](https://github.com/BuildWithCollab/collab-process)
@@ -38,7 +38,7 @@ target("my-project")
     add_packages("collab-core")
 ```
 
-## `vcpkg`
+### `vcpkg`
 
 - [`collab-core`](https://github.com/BuildWithCollab/collab-core)
 - [`collab-process`](https://github.com/BuildWithCollab/collab-process)
@@ -50,7 +50,7 @@ There are two configuration files you need:
 - `vcpkg-configuration.json`
 - `vcpkg.json`
 
-### `vcpkg-configuration.json`
+#### `vcpkg-configuration.json`
 
 This tells `vcpkg` where to find packages. Create this file in your project root:
 
@@ -65,7 +65,7 @@ This tells `vcpkg` where to find packages. Create this file in your project root
         {
             "kind": "git",
             "repository": "https://github.com/BuildWithCollab/Packages.git",
-            "baseline": "ab0efad9db600b5cad8e553810a8304219aeafc9",
+            "baseline": "18b93a0d0de5e22b45564b015ae4d6b160e66cc0",
             "packages": [
                 "collab-core",
                 "collab-process"
@@ -77,7 +77,7 @@ This tells `vcpkg` where to find packages. Create this file in your project root
 
 > Update the `packages` list with the names of the packages you want to use from this registry.
 
-#### Updating Baselines
+##### Updating Baselines
 
 A `baseline` is a git commit hash. `vcpkg` uses it to determine which package versions are available.
 
@@ -97,7 +97,7 @@ To get the latest baseline for the main `vcpkg` registry:
 git ls-remote https://github.com/microsoft/vcpkg.git HEAD
 ```
 
-### `vcpkg.json`
+#### `vcpkg.json`
 
 This is your project manifest. Add the packages you want:
 
