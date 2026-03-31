@@ -4,7 +4,7 @@ package("piper-phonemize")
     set_license("MIT")
     add_urls("https://github.com/BuildWithCollab/collab-piper-phonemize-fork/archive/refs/tags/$(version).tar.gz")
 -- [[ GENERATED:versions ]]
-    add_versions("2026.03.30-test1", "6e5e249ad748d2cd5ccc23c637ec60725469f5fea2f7e890e1e2d1b9e8fea16f")
+    add_versions("2026.03.30-test1", "e9eb938916d342995827b047e61da06a7a4e90463963093e3f884e0c81af0d6d")
 -- [[ /GENERATED:versions ]]
 -- [[ GENERATED:deps ]]
     add_deps("espeak-ng")
