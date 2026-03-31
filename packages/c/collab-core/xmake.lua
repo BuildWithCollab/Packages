@@ -13,8 +13,8 @@ package("collab-core")
     add_deps("spdlog")
     add_deps("platformfolders")
 -- [[ /GENERATED:deps ]]
--- [[ GENERATED:install ]]
     on_install(function (package)
+-- [[ GENERATED:install ]]
         import("package.tools.xmake").install(package, { build_tests = false })
-    end)
 -- [[ /GENERATED:install ]]
+    end)

@@ -43,6 +43,30 @@
       "xmake-config": {
         "build_tests": false
       }
+    },
+    "espeak-ng": {
+      "repo": "BuildWithCollab/collab-espeak-ng-fork",
+      "registries": [
+        "xmake"
+      ]
+    },
+    "piper-phonemize": {
+      "repo": "BuildWithCollab/collab-piper-phonemize-fork",
+      "registries": [
+        "xmake"
+      ],
+      "dependencies": [
+        "espeak-ng"
+      ]
+    },
+    "piper": {
+      "repo": "BuildWithCollab/collab-piper-fork",
+      "registries": [
+        "xmake"
+      ],
+      "dependencies": [
+        "piper-phonemize"
+      ]
     }
   }
 }
