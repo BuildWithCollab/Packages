@@ -3,11 +3,17 @@ package("collab-process")
     set_description("Collab Process ▶️🖥️")
     set_license("0BSD")
     add_urls("https://github.com/BuildWithCollab/collab-process/archive/refs/tags/$(version).tar.gz")
+-- [[ GENERATED:versions ]]
     add_versions("v0.1.0", "6dcf3892cfa577fe8c0a8b1cc6cce18c9826806de849bc16c294ff120c0623bc")
     add_versions("v0.2.0", "86d8acea2984f165575d2c9ec9c9fc62be7002da02a5f0e189f292e3d14300cc")
     add_versions("v0.3.0", "f40d07a5e0c382e689cb87849745a4ad6fa5c015e270aca2ae5331a80ff4e91f")
+-- [[ /GENERATED:versions ]]
+-- [[ GENERATED:deps ]]
     add_deps("collab-core")
     add_deps("fmt")
+-- [[ /GENERATED:deps ]]
+-- [[ GENERATED:install ]]
     on_install(function (package)
         import("package.tools.xmake").install(package, { build_tests = false })
     end)
+-- [[ /GENERATED:install ]]
