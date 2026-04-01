@@ -34,16 +34,14 @@
       "versions": [
         "v0.1.0",
         "v0.2.0",
-        "v0.3.0"
+        "v0.3.0",
+        "v1.0.0"
       ],
       "xmake-config": {
         "build_tests": false
       },
       "dependencies": [
-        {
-          "name": "collab-core",
-          "version": "0.3.x"
-        }
+        "collab-core"
       ]
     },
     "espeak-ng": {
