@@ -1,0 +1,12 @@
+{
+  "BuildWithCollab/collab-core@v0.1.0": "3e7d90bf9472d9fa122d6103349c1fa970d30e30d6a909dc7d73dbc959a110b4",
+  "BuildWithCollab/collab-core@v0.2.0": "cafae39c8af142a4d58de78950a8cdc8b657580a7712c3f52b88702cb889e170",
+  "BuildWithCollab/collab-core@v0.3.0": "ecb3541431a1612bc634842261d5619d61899f1156ea67aef9306c88a40755cf",
+  "BuildWithCollab/collab-process@v0.1.0": "6dcf3892cfa577fe8c0a8b1cc6cce18c9826806de849bc16c294ff120c0623bc",
+  "BuildWithCollab/collab-process@v0.2.0": "86d8acea2984f165575d2c9ec9c9fc62be7002da02a5f0e189f292e3d14300cc",
+  "BuildWithCollab/collab-process@v0.3.0": "f40d07a5e0c382e689cb87849745a4ad6fa5c015e270aca2ae5331a80ff4e91f",
+  "BuildWithCollab/collab-process@v1.0.0": "c94dcff16e4fd445616e19292b2b2e052bf5e2d3a46e55ecb9220dbda5159ee8",
+  "BuildWithCollab/collab-espeak-ng-fork@2026.03.30-test1": "05a526d6d554da4ee4f05e2efdaa91ea66ff64f6159c0da5c7bc819ea7dd176d",
+  "BuildWithCollab/collab-piper-phonemize-fork@2026.03.30-test1": "e9eb938916d342995827b047e61da06a7a4e90463963093e3f884e0c81af0d6d",
+  "BuildWithCollab/collab-piper-fork@2026.03.30-test1": "86d7668d6ecaeebf41307e637f86e0494a8e275b43cbcd56d82b2ad93a77f44d"
+}
