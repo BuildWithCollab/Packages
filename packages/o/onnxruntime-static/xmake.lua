@@ -8,7 +8,7 @@ package("onnxruntime-static")
         add_versions("1.24.4", "2bfde0766375ab8a40c63120f7146b472d450a8ee2e72009483da1d559737b3d")
     elseif is_plat("macosx") and is_arch("arm64") then
         set_urls("https://github.com/BuildWithCollab/Packages/releases/download/onnxruntime-static-v$(version)/onnxruntime-osx-arm64-static-$(version).tar.gz")
-        add_versions("1.24.4", "a778905e1bddcb4ed4e3769de405e466862957288807890ede3f7b537b7bcf51")
+        add_versions("1.24.4", "23de4bf4207bfe738b165a1a27dc520c278bcacb272ba45f507af06086657807")
     elseif is_plat("linux") and is_arch("x86_64") then
         set_urls("https://github.com/BuildWithCollab/Packages/releases/download/onnxruntime-static-v$(version)/onnxruntime-linux-x64-static-$(version).tar.gz")
         add_versions("1.24.4", "ce49d8bd11c8607f6e8fd5863bcf45e0bc7eae19a22a130a2ba7e30f5b788fbb")
