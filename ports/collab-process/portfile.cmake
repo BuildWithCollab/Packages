@@ -1,7 +1,7 @@
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://github.com/BuildWithCollab/collab-process.git
-    REF 587fd09049077ddebffa929b42424fb563a237b8
+    REF c251822e9c72f9d3737f558526352485afa536c8
 )
 
 vcpkg_cmake_configure(
