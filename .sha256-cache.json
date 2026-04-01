@@ -8,5 +8,6 @@
   "BuildWithCollab/collab-process@v1.0.0": "c94dcff16e4fd445616e19292b2b2e052bf5e2d3a46e55ecb9220dbda5159ee8",
   "BuildWithCollab/collab-espeak-ng-fork@2026.03.30-test1": "05a526d6d554da4ee4f05e2efdaa91ea66ff64f6159c0da5c7bc819ea7dd176d",
   "BuildWithCollab/collab-piper-phonemize-fork@2026.03.30-test1": "e9eb938916d342995827b047e61da06a7a4e90463963093e3f884e0c81af0d6d",
-  "BuildWithCollab/collab-piper-fork@2026.03.30-test1": "86d7668d6ecaeebf41307e637f86e0494a8e275b43cbcd56d82b2ad93a77f44d"
+  "BuildWithCollab/collab-piper-fork@2026.03.30-test1": "86d7668d6ecaeebf41307e637f86e0494a8e275b43cbcd56d82b2ad93a77f44d",
+  "BuildWithCollab/collab-process@v1.1.0": "b1c714f05614b75e25ba6a2162fffe1751155f3a0baaf88f2540fba95a5e090d"
 }
