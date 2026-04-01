@@ -9,8 +9,7 @@ package("collab-process")
     add_versions("v0.3.0", "f40d07a5e0c382e689cb87849745a4ad6fa5c015e270aca2ae5331a80ff4e91f")
 -- [[ /GENERATED:versions ]]
 -- [[ GENERATED:deps ]]
-    add_deps("collab-core")
-    add_deps("fmt")
+    add_deps("collab-core 0.3.x")
 -- [[ /GENERATED:deps ]]
     on_install(function (package)
 -- [[ GENERATED:install ]]
