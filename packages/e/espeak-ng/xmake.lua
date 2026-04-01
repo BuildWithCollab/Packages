@@ -18,5 +18,5 @@ package("espeak-ng")
         import("package.tools.xmake").install(package)
 -- [[ /GENERATED:install ]]
         -- Install compiled phoneme data so consumers can find it at runtime
-        os.cp("espeak-ng-data", package:installdir("share/espeak-ng-data"))
+        os.cp("espeak-ng-data", package:installdir("share"))
     end)
