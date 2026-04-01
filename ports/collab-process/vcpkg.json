@@ -1,7 +1,7 @@
 {
   "name": "collab-process",
-  "version-string": "2026-03-30-6f30760",
-  "description": "Collab Process \u25b6\ufe0f\ud83d\udda5\ufe0f",
+  "version-string": "2026-03-30-d39292b",
+  "description": "Collab Process \ud83d\udd00",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
@@ -11,7 +11,6 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    "collab-core",
-    "fmt"
+    "collab-core"
   ]
 }
