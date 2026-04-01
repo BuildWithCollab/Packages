@@ -8,7 +8,7 @@ package("piper-phonemize")
 -- [[ /GENERATED:versions ]]
 -- [[ GENERATED:deps ]]
     add_deps("espeak-ng")
-    add_deps("onnxruntime")
+    add_deps("onnxruntime-static")
 -- [[ /GENERATED:deps ]]
     -- Headers contain IPA character literals that need /utf-8 on MSVC
     if is_plat("windows") then
