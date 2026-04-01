@@ -5,13 +5,13 @@ package("onnxruntime-static")
 
     if is_plat("windows") and is_arch("x64") then
         set_urls("https://github.com/BuildWithCollab/Packages/releases/download/onnxruntime-static-v$(version)/onnxruntime-win-x64-static-$(version).tar.gz")
-        add_versions("1.24.4", "392110bcc78fd604550c2731fb04b1e08a08869ac39a2d2088bc752e6ffe3698")
+        add_versions("1.24.4", "2bfde0766375ab8a40c63120f7146b472d450a8ee2e72009483da1d559737b3d")
     elseif is_plat("macosx") and is_arch("arm64") then
         set_urls("https://github.com/BuildWithCollab/Packages/releases/download/onnxruntime-static-v$(version)/onnxruntime-osx-arm64-static-$(version).tar.gz")
-        add_versions("1.24.4", "c1676c9626ee713001bf196f6c0c23c92809751c55b6fe17ff4f6171a9ab96cd")
+        add_versions("1.24.4", "7487c0d29f20873902b82cc5a5492431d661caf041bafe6ef59b398f111771e3")
     elseif is_plat("linux") and is_arch("x86_64") then
         set_urls("https://github.com/BuildWithCollab/Packages/releases/download/onnxruntime-static-v$(version)/onnxruntime-linux-x64-static-$(version).tar.gz")
-        add_versions("1.24.4", "cfaa3f770c400629f8810ef2f7a3c2165e01b5814681c7244925451bcec86428")
+        add_versions("1.24.4", "ce49d8bd11c8607f6e8fd5863bcf45e0bc7eae19a22a130a2ba7e30f5b788fbb")
     end
 
     on_check(function (package)
