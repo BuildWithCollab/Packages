@@ -83,6 +83,15 @@
       "versions": [
         "2026.03.30-test1"
       ]
+    },
+    "stduuid-xmake": {
+      "repo": "BuildWithCollab/collab-stduuid-fork",
+      "registries": [
+        "xmake"
+      ],
+      "versions": [
+        "v1.2.3"
+      ]
     }
   }
 }
