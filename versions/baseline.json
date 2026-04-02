@@ -7,10 +7,6 @@
     "collab-process": {
       "baseline": "2026-04-01-c251822",
       "port-version": 0
-    },
-    "stduuid": {
-      "baseline": "2026-04-02-16065bf",
-      "port-version": 0
     }
   }
 }
