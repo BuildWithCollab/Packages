@@ -10,6 +10,5 @@
   "BuildWithCollab/collab-piper-phonemize-fork@2026.03.30-test1": "e9eb938916d342995827b047e61da06a7a4e90463963093e3f884e0c81af0d6d",
   "BuildWithCollab/collab-piper-fork@2026.03.30-test1": "86d7668d6ecaeebf41307e637f86e0494a8e275b43cbcd56d82b2ad93a77f44d",
   "BuildWithCollab/collab-process@v1.1.0": "b1c714f05614b75e25ba6a2162fffe1751155f3a0baaf88f2540fba95a5e090d",
-  "BuildWithCollab/collab-core@v0.5.0": "4078c137a5afcb62866c8ece70a9f36706b7b04e469f8ddd6aa34a2352ce783c",
-  "BuildWithCollab/collab-stduuid-fork@v1.2.3": "3fc6023246b35bcb2a9c295014f769afa4f0016eeb9ec2351a67dfd1d53c6f3b"
+  "BuildWithCollab/collab-core@v0.5.0": "4078c137a5afcb62866c8ece70a9f36706b7b04e469f8ddd6aa34a2352ce783c"
 }
