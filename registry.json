@@ -92,6 +92,15 @@
       "versions": [
         "v1.2.3"
       ]
+    },
+    "lowwi-static": {
+      "repo": "BuildWithCollab/collab-lowwi-fork",
+      "registries": [
+        "xmake"
+      ],
+      "dependencies": [
+        "onnxruntime-static"
+      ]
     }
   }
 }
