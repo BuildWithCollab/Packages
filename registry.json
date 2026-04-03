@@ -37,7 +37,8 @@
         "v0.2.0",
         "v0.3.0",
         "v1.0.0",
-        "v1.1.0"
+        "v1.1.0",
+        "v1.1.1"
       ],
       "xmake-config": {
         "build_tests": false
@@ -100,6 +101,9 @@
       ],
       "dependencies": [
         "onnxruntime-static"
+      ],
+      "versions": [
+        "v3.0"
       ]
     }
   }
