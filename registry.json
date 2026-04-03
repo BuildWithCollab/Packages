@@ -104,7 +104,10 @@
       ],
       "versions": [
         "v3.0"
-      ]
+      ],
+      "xmake-config": {
+        "build_examples": false
+      }
     }
   }
 }

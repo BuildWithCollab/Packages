@@ -11,6 +11,6 @@ package("lowwi-static")
 -- [[ /GENERATED:deps ]]
     on_install(function (package)
 -- [[ GENERATED:install ]]
-        import("package.tools.xmake").install(package)
+        import("package.tools.xmake").install(package, { build_examples = false })
 -- [[ /GENERATED:install ]]
     end)
