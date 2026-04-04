@@ -118,7 +118,8 @@
         "yaml-cpp"
       ],
       "versions": [
-        "v1.0.2"
+        "v1.0.2",
+        "v1.0.3"
       ],
       "xmake-config": {
         "build_tests": false,
