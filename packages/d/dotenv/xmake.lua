@@ -9,9 +9,11 @@ package("dotenv")
 -- [[ GENERATED:deps ]]
     add_deps("collab-core")
     add_deps("collab-process")
+    add_deps("nlohmann_json")
+    add_deps("yaml-cpp")
 -- [[ /GENERATED:deps ]]
     on_install(function (package)
 -- [[ GENERATED:install ]]
-        import("package.tools.xmake").install(package)
+        import("package.tools.xmake").install(package, { build_tests = false, build_executable = false })
 -- [[ /GENERATED:install ]]
     end)

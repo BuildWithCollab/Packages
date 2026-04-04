@@ -113,11 +113,17 @@
       "repo": "BuildWithCollab/dotenv",
       "dependencies": [
         "collab-core",
-        "collab-process"
+        "collab-process",
+        "nlohmann_json",
+        "yaml-cpp"
       ],
       "versions": [
         "v1.0.2"
-      ]
+      ],
+      "xmake-config": {
+        "build_tests": false,
+        "build_executable": false
+      }
     }
   }
 }
