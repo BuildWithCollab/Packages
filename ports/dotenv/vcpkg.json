@@ -12,6 +12,8 @@
       "host": true
     },
     "collab-core",
-    "collab-process"
+    "collab-process",
+    "nlohmann-json",
+    "yaml-cpp"
   ]
 }
