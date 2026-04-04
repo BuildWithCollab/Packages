@@ -1,7 +1,7 @@
 vcpkg_from_git(
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://github.com/BuildWithCollab/dotenv.git
-    REF 48c019e15942aad932692dbb3698849f7950e297
+    REF f1142576ef7d3898ca86b1a59fcb44c47accd853
 )
 
 vcpkg_cmake_configure(
