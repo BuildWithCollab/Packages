@@ -108,6 +108,16 @@
       "xmake-config": {
         "build_examples": false
       }
+    },
+    "dotenv": {
+      "repo": "BuildWithCollab/dotenv",
+      "dependencies": [
+        "collab-core",
+        "collab-process"
+      ],
+      "versions": [
+        "v1.0.2"
+      ]
     }
   }
 }

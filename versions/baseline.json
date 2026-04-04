@@ -7,6 +7,10 @@
     "collab-process": {
       "baseline": "2026-04-03-0239f19",
       "port-version": 0
+    },
+    "dotenv": {
+      "baseline": "2026-04-03-48c019e",
+      "port-version": 0
     }
   }
 }

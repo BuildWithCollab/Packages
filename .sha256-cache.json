@@ -13,5 +13,6 @@
   "BuildWithCollab/collab-core@v0.5.0": "4078c137a5afcb62866c8ece70a9f36706b7b04e469f8ddd6aa34a2352ce783c",
   "BuildWithCollab/collab-stduuid-fork@v1.2.3": "3fc6023246b35bcb2a9c295014f769afa4f0016eeb9ec2351a67dfd1d53c6f3b",
   "BuildWithCollab/collab-process@v1.1.1": "2d59ab6ffd49668a0005514e2c57da60205f4c8adce32ff9013230717e683427",
-  "BuildWithCollab/collab-lowwi-fork@v3.0": "bce8d5476267904c4dafa7a90586e0d70e2f6120049b552ad407451dc1053ebd"
+  "BuildWithCollab/collab-lowwi-fork@v3.0": "bce8d5476267904c4dafa7a90586e0d70e2f6120049b552ad407451dc1053ebd",
+  "BuildWithCollab/dotenv@v1.0.2": "760a09c4b114436153e93677edeffe75d06af71f9c2e1f08469c30d3718fba8e"
 }
