@@ -15,5 +15,6 @@
   "BuildWithCollab/collab-process@v1.1.1": "2d59ab6ffd49668a0005514e2c57da60205f4c8adce32ff9013230717e683427",
   "BuildWithCollab/collab-lowwi-fork@v3.0": "bce8d5476267904c4dafa7a90586e0d70e2f6120049b552ad407451dc1053ebd",
   "BuildWithCollab/dotenv@v1.0.2": "760a09c4b114436153e93677edeffe75d06af71f9c2e1f08469c30d3718fba8e",
-  "BuildWithCollab/dotenv@v1.0.3": "6b46dd4dae42fa21b5033f70f88428f2303f977450058e9e8ef62572ec378044"
+  "BuildWithCollab/dotenv@v1.0.3": "6b46dd4dae42fa21b5033f70f88428f2303f977450058e9e8ef62572ec378044",
+  "BuildWithCollab/collab-process@v1.2.0": "cf44fd698cab6abb61bf2a5365660812646573bf045e8b40a6da8de972a20d60"
 }

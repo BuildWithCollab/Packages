@@ -10,6 +10,7 @@ package("collab-process")
     add_versions("v1.0.0", "c94dcff16e4fd445616e19292b2b2e052bf5e2d3a46e55ecb9220dbda5159ee8")
     add_versions("v1.1.0", "b1c714f05614b75e25ba6a2162fffe1751155f3a0baaf88f2540fba95a5e090d")
     add_versions("v1.1.1", "2d59ab6ffd49668a0005514e2c57da60205f4c8adce32ff9013230717e683427")
+    add_versions("v1.2.0", "cf44fd698cab6abb61bf2a5365660812646573bf045e8b40a6da8de972a20d60")
 -- [[ /GENERATED:versions ]]
 -- [[ GENERATED:deps ]]
     add_deps("collab-core")
