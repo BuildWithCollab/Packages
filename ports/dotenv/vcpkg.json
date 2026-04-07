@@ -1,6 +1,6 @@
 {
   "name": "dotenv",
-  "version-string": "2026-04-04-f114257",
+  "version-string": "2026-04-07-d4ad2d7",
   "description": ".env library and CLI \ud83d\udd27",
   "dependencies": [
     {
