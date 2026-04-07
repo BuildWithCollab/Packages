@@ -14,6 +14,7 @@ package("collab-process")
 -- [[ /GENERATED:versions ]]
 -- [[ GENERATED:deps ]]
     add_deps("collab-core")
+    add_deps("dotenv")
 -- [[ /GENERATED:deps ]]
     on_install(function (package)
 -- [[ GENERATED:install ]]

@@ -45,7 +45,8 @@
         "build_tests": false
       },
       "dependencies": [
-        "collab-core"
+        "collab-core",
+        "dotenv"
       ]
     },
     "espeak-ng": {
