@@ -9,7 +9,6 @@ package("dotenv")
 -- [[ /GENERATED:versions ]]
 -- [[ GENERATED:deps ]]
     add_deps("collab-core")
-    add_deps("collab-process")
     add_deps("nlohmann_json")
     add_deps("yaml-cpp")
 -- [[ /GENERATED:deps ]]

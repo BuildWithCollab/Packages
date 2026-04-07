@@ -114,7 +114,6 @@
       "repo": "BuildWithCollab/dotenv",
       "dependencies": [
         "collab-core",
-        "collab-process",
         "nlohmann_json",
         "yaml-cpp"
       ],
