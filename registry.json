@@ -127,6 +127,15 @@
         "build_tests": false,
         "build_executable": false
       }
+    },
+    "pfr_non_boost": {
+      "repo": "BuildWithCollab/collab-pfr_non_boost-fork",
+      "registries": [
+        "xmake"
+      ],
+      "versions": [
+        "2.3.2"
+      ]
     }
   }
 }
