@@ -136,6 +136,15 @@
       "versions": [
         "2.3.2"
       ]
+    },
+    "nlohmann_json-module-support": {
+      "repo": "BuildWithCollab/collab-json-fork",
+      "registries": [
+        "xmake"
+      ],
+      "versions": [
+        "fixes-4529"
+      ]
     }
   }
 }
