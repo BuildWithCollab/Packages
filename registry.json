@@ -143,7 +143,8 @@
         "xmake"
       ],
       "versions": [
-        "fixes-4529"
+        "fixes-4529",
+        "v0.0.1"
       ]
     }
   }
