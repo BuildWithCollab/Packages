@@ -20,5 +20,6 @@
   "BuildWithCollab/dotenv@v1.0.4": "dd62275a2df2faa11293bb72f958f293f502ecc26864049cc3636db9f2fc1c1b",
   "BuildWithCollab/collab-pfr_non_boost-fork@2.3.2": "5d6a05bd657d2c3cda119d8a6ff8195be962e2679fe66b2e999838e54ccf2508",
   "BuildWithCollab/collab-json-fork@fixes-4529": "c4b53b6e9832ed81e63fed599f06eb83e8e2b8c0707891ef55e8c964c473cf90",
-  "BuildWithCollab/collab-json-fork@v0.0.1": "f171b2a5ba74fdf288e40c8a1f6bd2259378af0afa2166c3438d15c56b4c4a6c"
+  "BuildWithCollab/collab-json-fork@v0.0.1": "f171b2a5ba74fdf288e40c8a1f6bd2259378af0afa2166c3438d15c56b4c4a6c",
+  "BuildWithCollab/collab-json-fork@v0.0.2": "fbbe4021b659033d362aa7b9acd2ee7256e4e117d52652b411a9b35cd3e11e43"
 }
