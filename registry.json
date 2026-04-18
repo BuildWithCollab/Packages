@@ -166,6 +166,15 @@
       "versions": [
         "v1.14.0"
       ]
+    },
+    "libsass": {
+      "repo": "BuildWithCollab/collab-libsass-fork",
+      "registries": [
+        "xmake"
+      ],
+      "versions": [
+        "3.6.6"
+      ]
     }
   }
 }
