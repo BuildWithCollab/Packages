@@ -23,5 +23,6 @@
   "BuildWithCollab/collab-json-fork@v0.0.1": "f171b2a5ba74fdf288e40c8a1f6bd2259378af0afa2166c3438d15c56b4c4a6c",
   "BuildWithCollab/collab-json-fork@v0.0.2": "fbbe4021b659033d362aa7b9acd2ee7256e4e117d52652b411a9b35cd3e11e43",
   "BuildWithCollab/collab-nameof-fork@v0.0.1": "8734b8ab157a342dc3f27caac31d1042238eea1b1f0f1ab6a35169f5b9439710",
-  "BuildWithCollab/collab-process@v1.2.1": "f60f5a37caee31167ed96300f16210b50d34e6285e8faa94b0a054dec08b4395"
+  "BuildWithCollab/collab-process@v1.2.1": "f60f5a37caee31167ed96300f16210b50d34e6285e8faa94b0a054dec08b4395",
+  "BuildWithCollab/collab-qlementine-icons-fork@v1.14.0": "c26a868694a1ffe1e9db5f12e9491e45115462bb35ea710be6295769b364cca1"
 }
