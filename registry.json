@@ -147,6 +147,15 @@
         "v0.0.1",
         "v0.0.2"
       ]
+    },
+    "nameof-module-support": {
+      "repo": "BuildWithCollab/collab-nameof-fork",
+      "registries": [
+        "xmake"
+      ],
+      "versions": [
+        "v0.0.1"
+      ]
     }
   }
 }
