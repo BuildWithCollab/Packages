@@ -6,6 +6,7 @@ package("def_type")
 -- [[ GENERATED:versions ]]
     add_versions("1.0.0", "9310b4c3102cc28afc392c561847e6141f03487277e2403402516e8cb75f0b22")
     add_versions("1.0.1", "e8c70901818b3e28a1bb9c4f0a65f251a25780a41cf977452a3d1d6eb754fd3a")
+    add_versions("1.1.0", "5431a88f7048aef800e93a4a217edc394d3a772005de4f32959f66ce8c27fb08")
 -- [[ /GENERATED:versions ]]
 -- [[ GENERATED:deps ]]
     add_deps("pfr_non_boost")
