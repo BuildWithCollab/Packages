@@ -175,6 +175,18 @@
       "versions": [
         "3.6.6"
       ]
+    },
+    "def_type": {
+      "repo": "BuildWithCollab/def_type",
+      "registries": [
+        "xmake"
+      ],
+      "versions": [
+        "1.0.0"
+      ],
+      "dependencies": [
+        "pfr_non_boost"
+      ]
     }
   }
 }
