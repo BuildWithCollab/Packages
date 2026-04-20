@@ -185,7 +185,12 @@
         "1.0.0"
       ],
       "dependencies": [
-        "pfr_non_boost"
+        "pfr_non_boost",
+        "fmt",
+        "unordered_dense",
+        "magic_enum",
+        "nameof",
+        "nlohmann_json"
       ]
     }
   }

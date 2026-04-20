@@ -8,6 +8,11 @@ package("def_type")
 -- [[ /GENERATED:versions ]]
 -- [[ GENERATED:deps ]]
     add_deps("pfr_non_boost")
+    add_deps("fmt")
+    add_deps("unordered_dense")
+    add_deps("magic_enum")
+    add_deps("nameof")
+    add_deps("nlohmann_json")
 -- [[ /GENERATED:deps ]]
     on_install(function (package)
 -- [[ GENERATED:install ]]
