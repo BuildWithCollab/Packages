@@ -15,8 +15,12 @@ package("def_type")
     add_deps("nameof")
     add_deps("nlohmann_json")
 -- [[ /GENERATED:deps ]]
+    add_configs("enable_pfr", { description = "Enable PFR backend", default = true, type = "boolean" })
     on_install(function (package)
 -- [[ GENERATED:install ]]
         import("package.tools.xmake").install(package, { build_tests = false, enable_pfr = true })
 -- [[ /GENERATED:install ]]
+        if package:config("enable_pfr") then
+            package:add("defines", "DEF_TYPE_HAS_PFR")
+        end
     end)
