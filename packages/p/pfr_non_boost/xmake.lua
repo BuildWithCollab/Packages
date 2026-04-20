@@ -4,7 +4,7 @@ package("pfr_non_boost")
     set_license("BSL-1.0")
     add_urls("https://github.com/BuildWithCollab/collab-pfr_non_boost-fork/archive/refs/tags/$(version).tar.gz")
 -- [[ GENERATED:versions ]]
-    add_versions("2.3.2", "5d6a05bd657d2c3cda119d8a6ff8195be962e2679fe66b2e999838e54ccf2508")
+    add_versions("2.3.2", "6a091e1cab3b7b8c51a0b5c046f1f99372f4d348452ed82d20b2cf0ab08718f6")
 -- [[ /GENERATED:versions ]]
 -- [[ GENERATED:deps ]]
 -- [[ /GENERATED:deps ]]
