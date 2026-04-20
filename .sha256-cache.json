@@ -26,5 +26,6 @@
   "BuildWithCollab/collab-process@v1.2.1": "f60f5a37caee31167ed96300f16210b50d34e6285e8faa94b0a054dec08b4395",
   "BuildWithCollab/collab-qlementine-icons-fork@v1.14.0": "c26a868694a1ffe1e9db5f12e9491e45115462bb35ea710be6295769b364cca1",
   "BuildWithCollab/collab-libsass-fork@3.6.6": "55994d7ae4eb23287dc6e951ae52d1b71678d3eaac7b9adefdf77bce2c990800",
-  "BuildWithCollab/def_type@1.0.0": "9310b4c3102cc28afc392c561847e6141f03487277e2403402516e8cb75f0b22"
+  "BuildWithCollab/def_type@1.0.0": "9310b4c3102cc28afc392c561847e6141f03487277e2403402516e8cb75f0b22",
+  "BuildWithCollab/def_type@1.0.1": "e8c70901818b3e28a1bb9c4f0a65f251a25780a41cf977452a3d1d6eb754fd3a"
 }

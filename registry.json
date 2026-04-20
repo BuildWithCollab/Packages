@@ -182,7 +182,8 @@
         "xmake"
       ],
       "versions": [
-        "1.0.0"
+        "1.0.0",
+        "1.0.1"
       ],
       "dependencies": [
         "pfr_non_boost",
