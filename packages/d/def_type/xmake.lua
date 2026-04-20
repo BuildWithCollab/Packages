@@ -17,6 +17,6 @@ package("def_type")
 -- [[ /GENERATED:deps ]]
     on_install(function (package)
 -- [[ GENERATED:install ]]
-        import("package.tools.xmake").install(package)
+        import("package.tools.xmake").install(package, { build_tests = false, enable_pfr = true })
 -- [[ /GENERATED:install ]]
     end)
