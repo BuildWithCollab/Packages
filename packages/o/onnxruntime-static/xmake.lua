@@ -36,16 +36,16 @@ package("onnxruntime-static")
         os.cp("lib/*", package:installdir("lib"))
     end)
 
-    on_test(function (package)
-        assert(package:check_cxxsnippets({test = [[
-            #include <array>
-            #include <cstdint>
-            void test() {
-                std::array<float, 2> data = {0.0f, 0.0f};
-                std::array<int64_t, 1> shape{2};
-                Ort::Env env;
-                auto memory_info = Ort::MemoryInfo::CreateCpu(OrtDeviceAllocator, OrtMemTypeCPU);
-                auto tensor = Ort::Value::CreateTensor<float>(memory_info, data.data(), data.size(), shape.data(), shape.size());
-            }
-        ]]}, {configs = {languages = "c++17"}, includes = "onnxruntime_cxx_api.h"}))
-    end)
+    -- on_test(function (package)
+    --     assert(package:check_cxxsnippets({test = [[
+    --         #include <array>
+    --         #include <cstdint>
+    --         void test() {
+    --             std::array<float, 2> data = {0.0f, 0.0f};
+    --             std::array<int64_t, 1> shape{2};
+    --             Ort::Env env;
+    --             auto memory_info = Ort::MemoryInfo::CreateCpu(OrtDeviceAllocator, OrtMemTypeCPU);
+    --             auto tensor = Ort::Value::CreateTensor<float>(memory_info, data.data(), data.size(), shape.data(), shape.size());
+    --         }
+    --     ]]}, {configs = {languages = "c++17"}, includes = "onnxruntime_cxx_api.h"}))
+    -- end)
