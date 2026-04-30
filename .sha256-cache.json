@@ -28,5 +28,6 @@
   "BuildWithCollab/def_type@1.0.0": "9310b4c3102cc28afc392c561847e6141f03487277e2403402516e8cb75f0b22",
   "BuildWithCollab/def_type@1.0.1": "e8c70901818b3e28a1bb9c4f0a65f251a25780a41cf977452a3d1d6eb754fd3a",
   "BuildWithCollab/def_type@1.1.0": "5431a88f7048aef800e93a4a217edc394d3a772005de4f32959f66ce8c27fb08",
-  "BuildWithCollab/collab-pfr_non_boost-fork@2.3.2": "6a091e1cab3b7b8c51a0b5c046f1f99372f4d348452ed82d20b2cf0ab08718f6"
+  "BuildWithCollab/collab-pfr_non_boost-fork@2.3.2": "6a091e1cab3b7b8c51a0b5c046f1f99372f4d348452ed82d20b2cf0ab08718f6",
+  "BuildWithCollab/collab-safetensors-cpp-fork@1.0.0": "9cf37e4465a3f666b8b597c88aa54ae0f12dc2a87f0d57cbaa1b0737326a41bb"
 }

@@ -198,6 +198,15 @@
         "build_tests": false,
         "enable_pfr": true
       }
+    },
+    "safetensors-cpp": {
+      "repo": "BuildWithCollab/collab-safetensors-cpp-fork",
+      "registries": [
+        "xmake"
+      ],
+      "versions": [
+        "1.0.0"
+      ]
     }
   }
 }
