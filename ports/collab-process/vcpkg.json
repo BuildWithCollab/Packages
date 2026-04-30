@@ -1,7 +1,7 @@
 {
   "name": "collab-process",
   "version-string": "2026-04-18-956033d",
-  "description": "Collab Process \ud83d\udd00",
+  "description": "\ud83c\udfc3\u200d\u2640\ufe0f Collab Process",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
