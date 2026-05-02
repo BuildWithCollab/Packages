@@ -207,6 +207,18 @@
       "versions": [
         "1.0.0"
       ]
+    },
+    "lowwi": {
+      "repo": "BuildWithCollab/collab-lowwi-fork",
+      "registries": [
+        "xmake"
+      ],
+      "dependencies": [
+        "onnxruntime"
+      ],
+      "xmake-config": {
+        "build_examples": false
+      }
     }
   }
 }
