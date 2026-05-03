@@ -219,6 +219,15 @@
       "xmake-config": {
         "build_examples": false
       }
+    },
+    "rnnoise": {
+      "repo": "BuildWithCollab/collab-rnnoise-fork",
+      "registries": [
+        "xmake"
+      ],
+      "versions": [
+        "v0.2.0"
+      ]
     }
   }
 }
