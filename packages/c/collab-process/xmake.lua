@@ -12,6 +12,7 @@ package("collab-process")
     add_versions("v1.1.1", "2d59ab6ffd49668a0005514e2c57da60205f4c8adce32ff9013230717e683427")
     add_versions("v1.2.0", "cf44fd698cab6abb61bf2a5365660812646573bf045e8b40a6da8de972a20d60")
     add_versions("v1.2.1", "f60f5a37caee31167ed96300f16210b50d34e6285e8faa94b0a054dec08b4395")
+    add_versions("v2.1.0", "ec6be1fb1e408547dfdd5e695a7a8ba8b32c14a02b2b3962537ade5c8b07d34a")
 -- [[ /GENERATED:versions ]]
 -- [[ GENERATED:deps ]]
     add_deps("collab-core")
