@@ -8,6 +8,7 @@ package("def_type")
     add_versions("1.0.1", "e8c70901818b3e28a1bb9c4f0a65f251a25780a41cf977452a3d1d6eb754fd3a")
     add_versions("1.1.0", "5431a88f7048aef800e93a4a217edc394d3a772005de4f32959f66ce8c27fb08")
     add_versions("1.2.0", "cacc549de2889438e8df6b89561c22b6a157dc7a68330e331de21b72c448b431")
+    add_versions("1.3.0", "44c0a9b312fcb2386b2b003627c4baef4f0593946c8ce71266c03de01dce1a4d")
 -- [[ /GENERATED:versions ]]
 -- [[ GENERATED:deps ]]
     add_deps("pfr_non_boost")
