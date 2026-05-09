@@ -11,6 +11,7 @@ package("collab-core")
     add_versions("v0.6.0", "ae24dce9b557e9bb208cf03af48c708222aa74e57337e123b43221950d77335d")
     add_versions("v0.7.0", "08f63649f4d77a5968dfe6eea6523ff4008190248e07f04583ccb8fff63d3d74")
     add_versions("v0.8.0", "2ca3f680d3d067093dca83f1d2f5c538e0022fa65ac9473e632780890c2bdd5e")
+    add_versions("v0.8.1", "7fb50bc854e9be6a28d32191c1fa90af22dd74d66d537d45127d1e623a8ab7d8")
 -- [[ /GENERATED:versions ]]
 -- [[ GENERATED:deps ]]
     add_deps("fmt")

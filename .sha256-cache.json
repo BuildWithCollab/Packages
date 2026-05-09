@@ -39,5 +39,6 @@
   "BuildWithCollab/collab-core@v0.7.0": "08f63649f4d77a5968dfe6eea6523ff4008190248e07f04583ccb8fff63d3d74",
   "BuildWithCollab/def_type@1.3.1": "140227054353d26ff1fd44bb1c7839f87d2c712901459405a5693db812b956dd",
   "BuildWithCollab/def_type@1.3.2": "3f7fe90f77f71370f21dab086111ed1b7c9ec14ee0fdaba5610eb433f3ce494c",
-  "BuildWithCollab/collab-core@v0.8.0": "2ca3f680d3d067093dca83f1d2f5c538e0022fa65ac9473e632780890c2bdd5e"
+  "BuildWithCollab/collab-core@v0.8.0": "2ca3f680d3d067093dca83f1d2f5c538e0022fa65ac9473e632780890c2bdd5e",
+  "BuildWithCollab/collab-core@v0.8.1": "7fb50bc854e9be6a28d32191c1fa90af22dd74d66d537d45127d1e623a8ab7d8"
 }
