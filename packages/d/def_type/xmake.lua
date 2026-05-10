@@ -11,6 +11,7 @@ package("def_type")
     add_versions("1.3.0", "44c0a9b312fcb2386b2b003627c4baef4f0593946c8ce71266c03de01dce1a4d")
     add_versions("1.3.1", "140227054353d26ff1fd44bb1c7839f87d2c712901459405a5693db812b956dd")
     add_versions("1.3.2", "3f7fe90f77f71370f21dab086111ed1b7c9ec14ee0fdaba5610eb433f3ce494c")
+    add_versions("1.4.0", "86fce60022bdc37ac6144343b0ca2a222908391f6cbec22b8cbda9318a10ae01")
 -- [[ /GENERATED:versions ]]
 -- [[ GENERATED:deps ]]
     add_deps("pfr_non_boost")
@@ -18,7 +19,7 @@ package("def_type")
     add_deps("unordered_dense")
     add_deps("magic_enum")
     add_deps("nameof")
-    -- add_deps("nlohmann_json")
+    add_deps("nlohmann_json")
 -- [[ /GENERATED:deps ]]
 
     add_configs("enable_pfr", { description = "Enable PFR backend", default = true, type = "boolean" })
@@ -30,11 +31,7 @@ package("def_type")
     
     on_install(function (package)
 -- [[ GENERATED:install ]]
-        import("package.tools.xmake").install(package, {
-            build_tests = false,
-            enable_pfr = package:config("enable_pfr"),
-            nlohmann_json_pkg = package:config("nlohmann_json_pkg")
-        })
+        import("package.tools.xmake").install(package, { build_tests = false, enable_pfr = true })
 -- [[ /GENERATED:install ]]
         if package:config("enable_pfr") then
             package:add("defines", "DEF_TYPE_HAS_PFR")
