@@ -35,6 +35,10 @@
     {
       "version-string": "2026-05-12-ba25b3f",
       "git-tree": "58f132c3704d04060e7a3b817b5262086a9ca754"
+    },
+    {
+      "version-string": "2026-05-17-4feb6fa",
+      "git-tree": "5faf452ececb82dda38b279978124357badfb86b"
     }
   ]
 }
