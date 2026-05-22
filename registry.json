@@ -241,6 +241,15 @@
       "versions": [
         "v0.2.0"
       ]
+    },
+    "collab-hpp": {
+      "repo": "BuildWithCollab/collab.hpp",
+      "registries": [
+        "xmake"
+      ],
+      "versions": [
+        "v1.0.0"
+      ]
     }
   }
 }
