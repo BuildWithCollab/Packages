@@ -1,7 +1,7 @@
 {
   "name": "collab-core",
   "version-string": "2026-05-17-4feb6fa",
-  "description": "Collab Core \u2693",
+  "description": "\u26a1 Core library for Collab projects",
   "dependencies": [
     {
       "name": "vcpkg-cmake",
