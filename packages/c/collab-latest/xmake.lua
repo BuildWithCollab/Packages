@@ -12,5 +12,5 @@ package("collab-latest")
     add_deps("rang")
 
     on_install(function(package)
-        import("package.tools.xmake").install(package)
+        import("package.tools.xmake").install(package, { build_tests = false })
     end)
