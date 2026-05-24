@@ -17,7 +17,7 @@
   ],
   "features": {
     "header_only": {
-      "description": ""
+      "description": "Install header-only library"
     }
   }
 }
