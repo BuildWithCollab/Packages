@@ -25,11 +25,11 @@ package("collab-core")
 -- [[ GENERATED:deps_and_defines ]]
 -- [[ /GENERATED:deps_and_defines ]]
         if package:config("header_only") then
-            package:add_deps("fmt", { configs = { header_only = true } })
+            package:add("deps","fmt", { configs = { header_only = true } })
         else
-            package:add_deps("fmt")
-            package:add_deps("spdlog")
-            package:add_deps("rang")
+            package:add("deps","fmt")
+            package:add("deps","spdlog")
+            package:add("deps","rang")
         end
     end)
     on_install(function (package)
