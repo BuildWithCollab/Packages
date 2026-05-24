@@ -15,6 +15,7 @@ package("collab-core")
     add_versions("v0.8.2", "4b65ec7ff740be708b385c7100def49c7c8c7dde9a59b4403cf1b0cd960df897")
     add_versions("v0.9.0", "8c267256ee055b3a0fb7c8b112b74e6d2e9271f2f793e48090bee6e0c2b53d78")
     add_versions("v1.0.0", "9c59ff633ac683af6eb3fafbddab01b10137fe50586c5be0023d7533f5522d4c")
+    add_versions("v1.0.2", "df53e0b89c75c59c968ad538dbd7c8f3b0115b42d18a1ba0bcd455c541c75a18")
 -- [[ /GENERATED:versions ]]
 -- [[ GENERATED:configs ]]
     add_configs("header_only", { description = "Install header-only library", default = false, type = "boolean" })
@@ -24,13 +25,6 @@ package("collab-core")
     on_load(function (package)
 -- [[ GENERATED:deps_and_defines ]]
 -- [[ /GENERATED:deps_and_defines ]]
-        if package:config("header_only") then
-            package:add("deps","fmt", { configs = { header_only = true } })
-        else
-            package:add("deps","fmt")
-            package:add("deps","spdlog")
-            package:add("deps","rang")
-        end
     end)
     on_install(function (package)
 -- [[ GENERATED:install ]]
