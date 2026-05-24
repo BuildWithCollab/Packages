@@ -3,9 +3,15 @@ vcpkg_from_git(
     URL https://github.com/BuildWithCollab/collab-core.git
     REF a16ab8bc9ddf0cacc409868ef5233ba790ece342
 )
+vcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS
+    FEATURES
+        header_only HEADER_ONLY
+)
 
 vcpkg_cmake_configure(
     SOURCE_PATH ${SOURCE_PATH}
+    OPTIONS
+        ${FEATURE_OPTIONS}
 )
 
 vcpkg_cmake_install()

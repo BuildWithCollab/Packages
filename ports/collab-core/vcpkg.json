@@ -14,5 +14,10 @@
     "fmt",
     "spdlog",
     "platform-folders"
-  ]
+  ],
+  "features": {
+    "header_only": {
+      "description": ""
+    }
+  }
 }
