@@ -3,8 +3,7 @@
     "collab-core": {
       "repo": "BuildWithCollab/collab-core",
       "registries": [
-        "xmake",
-        "vcpkg"
+        "xmake"
       ],
       "versions": [
         "v0.1.0",
@@ -16,21 +15,19 @@
         "v0.8.0",
         "v0.8.1",
         "v0.8.2",
-        "v0.9.0"
+        "v0.9.0",
+        "v1.0.0"
       ],
       "dependencies": [
-        "fmt",
-        "spdlog"
       ],
       "xmake-config": {
         "build_tests": false
       },
-      "xmake-dependencies": [
-        "platformfolders"
-      ],
-      "vcpkg-dependencies": [
-        "platform-folders"
-      ]
+      "features": {
+        "header_only": {
+          "description": "Install header-only library"
+        }
+      }
     },
     "collab-process": {
       "repo": "BuildWithCollab/collab-process",

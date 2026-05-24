@@ -1,6 +1,6 @@
 package("collab-core")
     set_homepage("https://github.com/BuildWithCollab/collab-core")
-    set_description("Collab Core ⚓")
+    set_description("⚡ Core library for Collab projects")
     set_license("0BSD")
     add_urls("https://github.com/BuildWithCollab/collab-core/archive/refs/tags/$(version).tar.gz")
 -- [[ GENERATED:versions ]]
@@ -14,14 +14,28 @@ package("collab-core")
     add_versions("v0.8.1", "7fb50bc854e9be6a28d32191c1fa90af22dd74d66d537d45127d1e623a8ab7d8")
     add_versions("v0.8.2", "4b65ec7ff740be708b385c7100def49c7c8c7dde9a59b4403cf1b0cd960df897")
     add_versions("v0.9.0", "8c267256ee055b3a0fb7c8b112b74e6d2e9271f2f793e48090bee6e0c2b53d78")
+    add_versions("v1.0.0", "9c59ff633ac683af6eb3fafbddab01b10137fe50586c5be0023d7533f5522d4c")
 -- [[ /GENERATED:versions ]]
+-- [[ GENERATED:configs ]]
+    add_configs("header_only", { description = "Install header-only library", default = false, type = "boolean" })
+-- [[ /GENERATED:configs ]]
 -- [[ GENERATED:deps ]]
-    add_deps("fmt")
-    add_deps("spdlog")
-    add_deps("platformfolders")
 -- [[ /GENERATED:deps ]]
+    on_load(function (package)
+-- [[ GENERATED:deps_and_defines ]]
+-- [[ /GENERATED:deps_and_defines ]]
+        if package:config("header_only") then
+            package:add_deps("fmt", { configs = { header_only = true } })
+        else
+            package:add_deps("fmt")
+            package:add_deps("spdlog")
+            package:add_deps("rang")
+        end
+    end)
     on_install(function (package)
 -- [[ GENERATED:install ]]
-        import("package.tools.xmake").install(package, { build_tests = false })
+        local configs = { build_tests = false }
+        if package:config("header_only") and configs.header_only == nil then configs.header_only = true end
+        import("package.tools.xmake").install(package, configs)
 -- [[ /GENERATED:install ]]
     end)

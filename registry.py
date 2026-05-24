@@ -36,16 +36,40 @@ from urllib.request import Request, urlopen
 
 DEFAULT_REGISTRY_FILE = "registry.json"
 VALID_REGISTRIES = ("vcpkg", "xmake")
+VALID_BUILD_TOOLS = ("xmake", "cmake", "none")
 
 
 # --- Registry data operations ---
+
+
+def _migrate_pkg_in_place(pkg: dict) -> None:
+    if "options" in pkg and "cmake-options" not in pkg:
+        pkg["cmake-options"] = pkg.pop("options")
+
+
+def _get_build_tool(pkg: dict) -> str:
+    tool = pkg.get("build-tool")
+    if tool:
+        return tool
+    return "none" if pkg.get("header-only") else "xmake"
+
+
+def _default_cmake_option_name(feature_name: str) -> str:
+    return feature_name.upper().replace("-", "_")
+
+
+def _default_xmake_config_name(feature_name: str) -> str:
+    return feature_name.replace("-", "_")
 
 
 def load_registry(path: Path) -> dict:
     if not path.exists():
         return {"packages": {}}
     with open(path, "r", encoding="utf-8") as f:
-        return json.load(f)
+        data = json.load(f)
+    for pkg in data.get("packages", {}).values():
+        _migrate_pkg_in_place(pkg)
+    return data
 
 
 def save_registry(path: Path, data: dict) -> None:
@@ -60,6 +84,8 @@ def add_package(
     repo: str,
     branch: str | None = None,
     registries: list[str] | None = None,
+    header_only: bool = False,
+    build_tool: str | None = None,
 ) -> dict:
     packages = data.setdefault("packages", {})
     if name in packages:
@@ -70,6 +96,13 @@ def add_package(
         entry["branch"] = branch
     if registries and set(registries) != set(VALID_REGISTRIES):
         entry["registries"] = registries
+    if header_only:
+        entry["header-only"] = True
+    if build_tool:
+        if build_tool not in VALID_BUILD_TOOLS:
+            print(f"Invalid build-tool: '{build_tool}'. Valid options: {', '.join(VALID_BUILD_TOOLS)}", file=sys.stderr)
+            sys.exit(1)
+        entry["build-tool"] = build_tool
     packages[name] = entry
     return data
 
@@ -118,6 +151,7 @@ def list_packages(data: dict, name: str | None = None) -> None:
             print(f"Package '{name}' not found.", file=sys.stderr)
             sys.exit(1)
         pkg = packages[name]
+        _migrate_pkg_in_place(pkg)
         print(f"{name} ({pkg['repo']})")
         if "branch" in pkg:
             print(f"  branch: {pkg['branch']}")
@@ -135,9 +169,17 @@ def list_packages(data: dict, name: str | None = None) -> None:
             print("No packages.")
             return
         for pkg_name, pkg in packages.items():
+            _migrate_pkg_in_place(pkg)
             registries = pkg.get("registries", list(VALID_REGISTRIES))
             version_count = len(pkg.get("versions", []))
-            print(f"  {pkg_name} ({pkg['repo']}) [{', '.join(registries)}] ({version_count} versions)")
+            features = pkg.get("features", {})
+            n_versions = f"{version_count} version" + ("s" if version_count != 1 else "")
+            line = f"  {pkg_name} ({pkg['repo']}) [{', '.join(registries)}] ({n_versions}"
+            if features:
+                n_feat = len(features)
+                line += f", {n_feat} feature" + ("s" if n_feat != 1 else "")
+            line += ")"
+            print(line)
 
 
 def _format_dep_display(dep) -> str:
@@ -159,11 +201,13 @@ def show_package(data: dict, name: str) -> None:
         print(f"Package '{name}' not found.", file=sys.stderr)
         sys.exit(1)
     pkg = packages[name]
+    _migrate_pkg_in_place(pkg)
 
     print(f"{name}")
     print(f"  repo: {pkg['repo']}")
     if "branch" in pkg:
         print(f"  branch: {pkg['branch']}")
+    print(f"  build-tool: {_get_build_tool(pkg)}")
     registries = pkg.get("registries", list(VALID_REGISTRIES))
     print(f"  registries: {', '.join(registries)}")
     if pkg.get("header-only"):
@@ -187,10 +231,39 @@ def show_package(data: dict, name: str) -> None:
         for k, v in pkg["xmake-config"].items():
             print(f"    {k}: {v}")
 
-    if pkg.get("options"):
-        print(f"  options:")
-        for o in pkg["options"]:
+    if pkg.get("cmake-options"):
+        print(f"  cmake-options:")
+        for o in pkg["cmake-options"]:
             print(f"    - {o}")
+
+    features = pkg.get("features", {})
+    if features:
+        default_features = pkg.get("default-features", [])
+        print(f"  features:")
+        for fname, fdef in features.items():
+            ftype = _feature_type(fdef)
+            tag = " (default)" if ftype == "boolean" and fname in default_features else ""
+            print(f"    {fname}{tag}:")
+            if ftype != "boolean":
+                print(f"      type: {ftype}")
+            if fdef.get("description"):
+                print(f"      description: {fdef['description']}")
+            if "default" in fdef:
+                print(f"      default: {fdef['default']}")
+            if fdef.get("values"):
+                print(f"      values: {', '.join(fdef['values'])}")
+            if fdef.get("cmake-option"):
+                print(f"      cmake-option: {fdef['cmake-option']}")
+            if fdef.get("xmake-config"):
+                print(f"      xmake-config: {fdef['xmake-config']}")
+            if fdef.get("defines"):
+                print(f"      defines:")
+                for d in fdef["defines"]:
+                    print(f"        - {d}")
+            if fdef.get("dependencies"):
+                print(f"      dependencies:")
+                for d in fdef["dependencies"]:
+                    print(f"        - {_format_dep_display(d)}")
 
 
 def parse_kv_pair(s: str):
@@ -220,17 +293,56 @@ def _deps_key(registry: str | None = None) -> str:
     return "dependencies"
 
 
-def add_dependency(data: dict, name: str, dep_name: str, configs: dict | None = None, registry: str | None = None, version: str | None = None) -> dict:
+def _get_feature_or_exit(pkg: dict, pkg_name: str, feature: str) -> dict:
+    features = pkg.get("features", {})
+    if feature not in features:
+        print(f"Feature '{feature}' not found in '{pkg_name}'.", file=sys.stderr)
+        sys.exit(1)
+    return features[feature]
+
+
+def _feature_type(fdef: dict) -> str:
+    return fdef.get("type", "boolean")
+
+
+def _require_boolean_feature(fdef: dict, feature: str, pkg_name: str, op_label: str) -> None:
+    if _feature_type(fdef) != "boolean":
+        print(
+            f"Cannot {op_label} on non-boolean feature '{feature}' of '{pkg_name}' (string features can't have deps or defines).",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+
+def add_dependency(
+    data: dict,
+    name: str,
+    dep_name: str,
+    configs: dict | None = None,
+    registry: str | None = None,
+    version: str | None = None,
+    feature: str | None = None,
+) -> dict:
     packages = data.get("packages", {})
     if name not in packages:
         print(f"Package '{name}' not found.", file=sys.stderr)
         sys.exit(1)
-    key = _deps_key(registry)
-    deps = packages[name].setdefault(key, [])
+    if feature:
+        if registry:
+            print("--feature cannot be combined with --xmake or --vcpkg.", file=sys.stderr)
+            sys.exit(1)
+        fdef = _get_feature_or_exit(packages[name], name, feature)
+        _require_boolean_feature(fdef, feature, name, "add a dep")
+        deps = fdef.setdefault("dependencies", [])
+        scope_label = f"feature '{feature}' of '{name}'"
+    else:
+        key = _deps_key(registry)
+        deps = packages[name].setdefault(key, [])
+        scope_label = f"'{key}' for '{name}'"
     for d in deps:
         existing_name = d if isinstance(d, str) else d["name"]
         if existing_name == dep_name:
-            print(f"Dependency '{dep_name}' already exists in '{key}' for '{name}'.", file=sys.stderr)
+            print(f"Dependency '{dep_name}' already exists in {scope_label}.", file=sys.stderr)
             sys.exit(1)
     if configs or version:
         entry = {"name": dep_name}
@@ -244,13 +356,32 @@ def add_dependency(data: dict, name: str, dep_name: str, configs: dict | None = 
     return data
 
 
-def remove_dependency(data: dict, name: str, dep_name: str, registry: str | None = None) -> dict:
+def remove_dependency(
+    data: dict,
+    name: str,
+    dep_name: str,
+    registry: str | None = None,
+    feature: str | None = None,
+) -> dict:
     packages = data.get("packages", {})
     if name not in packages:
         print(f"Package '{name}' not found.", file=sys.stderr)
         sys.exit(1)
-    key = _deps_key(registry)
-    deps = packages[name].get(key, [])
+    if feature:
+        if registry:
+            print("--feature cannot be combined with --xmake or --vcpkg.", file=sys.stderr)
+            sys.exit(1)
+        fdef = _get_feature_or_exit(packages[name], name, feature)
+        _require_boolean_feature(fdef, feature, name, "remove a dep")
+        deps = fdef.get("dependencies", [])
+        scope_label = f"feature '{feature}' of '{name}'"
+        container = fdef
+        key = "dependencies"
+    else:
+        key = _deps_key(registry)
+        deps = packages[name].get(key, [])
+        scope_label = f"'{key}' for '{name}'"
+        container = packages[name]
     new_deps = []
     found = False
     for d in deps:
@@ -260,12 +391,13 @@ def remove_dependency(data: dict, name: str, dep_name: str, registry: str | None
         else:
             new_deps.append(d)
     if not found:
-        print(f"Dependency '{dep_name}' not found in '{key}' for '{name}'.", file=sys.stderr)
+        print(f"Dependency '{dep_name}' not found in {scope_label}.", file=sys.stderr)
         sys.exit(1)
     if new_deps:
-        packages[name][key] = new_deps
+        container[key] = new_deps
     else:
-        del packages[name][key]
+        if key in container:
+            del container[key]
     return data
 
 
@@ -276,6 +408,182 @@ def set_config(data: dict, name: str, key: str, value) -> dict:
         sys.exit(1)
     config = packages[name].setdefault("xmake-config", {})
     config[key] = value
+    return data
+
+
+# --- Feature data operations ---
+
+
+def add_feature(
+    data: dict,
+    name: str,
+    feature: str,
+    description: str = "",
+    cmake_option: str | None = None,
+    xmake_config: str | None = None,
+    type_: str = "boolean",
+    default: str | None = None,
+    values: list[str] | None = None,
+) -> dict:
+    if type_ not in ("boolean", "string"):
+        print(f"Invalid feature type: '{type_}'. Valid: 'boolean', 'string'.", file=sys.stderr)
+        sys.exit(1)
+    if type_ == "string" and default is None:
+        print(f"String features require --default.", file=sys.stderr)
+        sys.exit(1)
+    if type_ == "boolean" and (default is not None or values):
+        print(f"--default and --value are only valid for string features (--type string).", file=sys.stderr)
+        sys.exit(1)
+    packages = data.get("packages", {})
+    if name not in packages:
+        print(f"Package '{name}' not found.", file=sys.stderr)
+        sys.exit(1)
+    features = packages[name].setdefault("features", {})
+    if feature in features:
+        print(f"Feature '{feature}' already exists for '{name}'.", file=sys.stderr)
+        sys.exit(1)
+    fdef: dict = {"description": description}
+    if type_ != "boolean":
+        fdef["type"] = type_
+    if default is not None:
+        fdef["default"] = default
+    if values:
+        fdef["values"] = list(values)
+    if cmake_option:
+        fdef["cmake-option"] = cmake_option
+    if xmake_config:
+        fdef["xmake-config"] = xmake_config
+    features[feature] = fdef
+    return data
+
+
+def remove_feature(data: dict, name: str, feature: str) -> dict:
+    packages = data.get("packages", {})
+    if name not in packages:
+        print(f"Package '{name}' not found.", file=sys.stderr)
+        sys.exit(1)
+    features = packages[name].get("features", {})
+    if feature not in features:
+        print(f"Feature '{feature}' not found in '{name}'.", file=sys.stderr)
+        sys.exit(1)
+    del features[feature]
+    if not features:
+        del packages[name]["features"]
+    default_features = packages[name].get("default-features", [])
+    if feature in default_features:
+        default_features.remove(feature)
+        if not default_features:
+            del packages[name]["default-features"]
+    return data
+
+
+def set_feature(
+    data: dict,
+    name: str,
+    feature: str,
+    description: str | None = None,
+    cmake_option: str | None = None,
+    xmake_config: str | None = None,
+    default: str | None = None,
+    values: list[str] | None = None,
+) -> dict:
+    packages = data.get("packages", {})
+    if name not in packages:
+        print(f"Package '{name}' not found.", file=sys.stderr)
+        sys.exit(1)
+    fdef = _get_feature_or_exit(packages[name], name, feature)
+    if description is not None:
+        fdef["description"] = description
+    if cmake_option is not None:
+        fdef["cmake-option"] = cmake_option
+    if xmake_config is not None:
+        fdef["xmake-config"] = xmake_config
+    if default is not None:
+        if _feature_type(fdef) != "string":
+            print(f"--default is only valid for string features.", file=sys.stderr)
+            sys.exit(1)
+        fdef["default"] = default
+    if values:
+        if _feature_type(fdef) != "string":
+            print(f"--value is only valid for string features.", file=sys.stderr)
+            sys.exit(1)
+        fdef["values"] = list(values)
+    return data
+
+
+def add_define(data: dict, name: str, feature: str, macro: str) -> dict:
+    packages = data.get("packages", {})
+    if name not in packages:
+        print(f"Package '{name}' not found.", file=sys.stderr)
+        sys.exit(1)
+    fdef = _get_feature_or_exit(packages[name], name, feature)
+    _require_boolean_feature(fdef, feature, name, "add a define")
+    defines = fdef.setdefault("defines", [])
+    if macro in defines:
+        print(f"Define '{macro}' already exists in feature '{feature}' of '{name}'.", file=sys.stderr)
+        sys.exit(1)
+    defines.append(macro)
+    return data
+
+
+def remove_define(data: dict, name: str, feature: str, macro: str) -> dict:
+    packages = data.get("packages", {})
+    if name not in packages:
+        print(f"Package '{name}' not found.", file=sys.stderr)
+        sys.exit(1)
+    fdef = _get_feature_or_exit(packages[name], name, feature)
+    _require_boolean_feature(fdef, feature, name, "remove a define")
+    defines = fdef.get("defines", [])
+    if macro not in defines:
+        print(f"Define '{macro}' not found in feature '{feature}' of '{name}'.", file=sys.stderr)
+        sys.exit(1)
+    defines.remove(macro)
+    if not defines and "defines" in fdef:
+        del fdef["defines"]
+    return data
+
+
+def set_default_features(data: dict, name: str, features: list[str]) -> dict:
+    packages = data.get("packages", {})
+    if name not in packages:
+        print(f"Package '{name}' not found.", file=sys.stderr)
+        sys.exit(1)
+    declared = packages[name].get("features", {})
+    for f in features:
+        if f not in declared:
+            print(f"Feature '{f}' not declared on '{name}'. Add it first with add-feature.", file=sys.stderr)
+            sys.exit(1)
+    if features:
+        packages[name]["default-features"] = list(features)
+    elif "default-features" in packages[name]:
+        del packages[name]["default-features"]
+    return data
+
+
+def set_build_tool(data: dict, name: str, build_tool: str) -> dict:
+    packages = data.get("packages", {})
+    if name not in packages:
+        print(f"Package '{name}' not found.", file=sys.stderr)
+        sys.exit(1)
+    if build_tool not in VALID_BUILD_TOOLS:
+        print(f"Invalid build-tool: '{build_tool}'. Valid options: {', '.join(VALID_BUILD_TOOLS)}", file=sys.stderr)
+        sys.exit(1)
+    packages[name]["build-tool"] = build_tool
+    return data
+
+
+def set_cmake_option(data: dict, name: str, key: str, value: str) -> dict:
+    packages = data.get("packages", {})
+    if name not in packages:
+        print(f"Package '{name}' not found.", file=sys.stderr)
+        sys.exit(1)
+    options = packages[name].setdefault("cmake-options", [])
+    new_entry = f"{key}={value}"
+    for i, opt in enumerate(options):
+        if opt.split("=", 1)[0] == key:
+            options[i] = new_entry
+            return data
+    options.append(new_entry)
     return data
 
 
@@ -436,13 +744,118 @@ def _generate_xmake_deps_block(dependencies: list) -> list[str]:
     return lines
 
 
-def _generate_xmake_install_block(header_only: bool, xmake_config: dict | None) -> list[str]:
-    if header_only:
+def _generate_xmake_configs_block(features: dict, default_features: list[str]) -> list[str]:
+    lines = []
+    default_features = default_features or []
+    for fname, fdef in features.items():
+        desc = (fdef.get("description") or "").replace('"', '\\"')
+        if _feature_type(fdef) == "string":
+            default_val = (fdef.get("default") or "").replace('"', '\\"')
+            attrs = [
+                f'description = "{desc}"',
+                f'default = "{default_val}"',
+                'type = "string"',
+            ]
+            if fdef.get("values"):
+                vals = ", ".join(f'"{str(v).replace(chr(34), chr(92) + chr(34))}"' for v in fdef["values"])
+                attrs.append(f'values = {{ {vals} }}')
+            lines.append(f'    add_configs("{fname}", {{ {", ".join(attrs)} }})')
+        else:
+            is_default = "true" if fname in default_features else "false"
+            lines.append(
+                f'    add_configs("{fname}", {{ description = "{desc}", default = {is_default}, type = "boolean" }})'
+            )
+    return lines
+
+
+def _generate_xmake_deps_and_defines_block(features: dict) -> list[str]:
+    lines = []
+    for fname, fdef in features.items():
+        if _feature_type(fdef) != "boolean":
+            continue
+        deps = fdef.get("dependencies", []) or []
+        defines = fdef.get("defines", []) or []
+        if not deps and not defines:
+            continue
+        lines.append(f'        if package:config("{fname}") then')
+        for dep in deps:
+            if isinstance(dep, str):
+                lines.append(f'            package:add("deps", "{dep}")')
+            else:
+                dname = dep["name"]
+                version = dep.get("version", "")
+                name_str = f"{dname} {version}" if version else dname
+                configs = dep.get("configs", {})
+                if configs:
+                    lines.append(
+                        f'            package:add("deps", "{name_str}", {{ configs = {_lua_value(configs)} }})'
+                    )
+                else:
+                    lines.append(f'            package:add("deps", "{name_str}")')
+        for define in defines:
+            lines.append(f'            package:add("defines", "{define}")')
+        lines.append("        end")
+    return lines
+
+
+def _generate_xmake_install_block(
+    build_tool: str,
+    xmake_config: dict | None,
+    cmake_options: list[str] | None,
+    features: dict | None,
+) -> list[str]:
+    features = features or {}
+    xmake_config = xmake_config or {}
+    cmake_options = cmake_options or []
+
+    if build_tool == "none":
         return ['        os.cp("include", package:installdir())']
+
+    if build_tool == "cmake":
+        static_keys = {opt.split("=", 1)[0] for opt in cmake_options}
+        feature_lines = []
+        for fname, fdef in features.items():
+            opt_name = fdef.get("cmake-option") or _default_cmake_option_name(fname)
+            if opt_name in static_keys:
+                continue
+            if _feature_type(fdef) == "string":
+                feature_lines.append(
+                    f'        table.insert(configs, "-D{opt_name}=" .. package:config("{fname}"))'
+                )
+            else:
+                feature_lines.append(
+                    f'        table.insert(configs, "-D{opt_name}=" .. (package:config("{fname}") and "ON" or "OFF"))'
+                )
+        if not cmake_options and not feature_lines:
+            return ['        import("package.tools.cmake").install(package)']
+        opts_str = ", ".join(f'"-D{o}"' for o in cmake_options)
+        lines = [f'        local configs = {{ {opts_str} }}'] if cmake_options else ['        local configs = {}']
+        lines.extend(feature_lines)
+        lines.append('        import("package.tools.cmake").install(package, configs)')
+        return lines
+
+    # build_tool == "xmake"
+    if not features:
+        if xmake_config:
+            config_str = _lua_value(xmake_config)
+            return [f'        import("package.tools.xmake").install(package, {config_str})']
+        return ['        import("package.tools.xmake").install(package)']
     if xmake_config:
-        config_str = _lua_value(xmake_config)
-        return [f'        import("package.tools.xmake").install(package, {config_str})']
-    return ['        import("package.tools.xmake").install(package)']
+        lines = [f'        local configs = {_lua_value(xmake_config)}']
+    else:
+        lines = ['        local configs = {}']
+    for fname, fdef in features.items():
+        xc = fdef.get("xmake-config") or _default_xmake_config_name(fname)
+        if _feature_type(fdef) == "string":
+            lines.append(
+                f'        if configs.{xc} == nil then configs.{xc} = package:config("{fname}") end'
+            )
+        else:
+            lines.append(
+                f'        if package:config("{fname}") and configs.{xc} == nil then configs.{xc} = true end'
+            )
+    lines.append('        import("package.tools.xmake").install(package, configs)')
+    return lines
 
 
 def generate_xmake_lua(
@@ -455,34 +868,84 @@ def generate_xmake_lua(
     header_only: bool = False,
     license: str = "",
     xmake_config: dict | None = None,
+    build_tool: str | None = None,
+    cmake_options: list[str] | None = None,
+    features: dict | None = None,
+    default_features: list[str] | None = None,
 ) -> str:
+    if build_tool is None:
+        build_tool = "none" if header_only else "xmake"
+    features = features or {}
+    default_features = default_features or []
+
     lines = []
     lines.append(f'package("{name}")')
+    if header_only:
+        lines.append('    set_kind("library", {headeronly = true})')
     lines.append(f'    set_homepage("https://github.com/{repo}")')
     lines.append(f'    set_description("{description}")')
     if license:
         lines.append(f'    set_license("{license}")')
     lines.append(f'    add_urls("https://github.com/{repo}/archive/refs/tags/$(version).tar.gz")')
 
-    # Versions section
     lines.append(_marker_start("versions"))
     lines.extend(_generate_xmake_versions_block(versions, version_hashes))
     lines.append(_marker_end("versions"))
 
-    # Dependencies section
+    if features:
+        lines.append(_marker_start("configs"))
+        lines.extend(_generate_xmake_configs_block(features, default_features))
+        lines.append(_marker_end("configs"))
+
     lines.append(_marker_start("deps"))
     if dependencies:
         lines.extend(_generate_xmake_deps_block(dependencies))
     lines.append(_marker_end("deps"))
 
-    # Install section
+    if features:
+        lines.append('    on_load(function (package)')
+        lines.append(_marker_start("deps_and_defines"))
+        lines.extend(_generate_xmake_deps_and_defines_block(features))
+        lines.append(_marker_end("deps_and_defines"))
+        lines.append('    end)')
+
     lines.append('    on_install(function (package)')
     lines.append(_marker_start("install"))
-    lines.extend(_generate_xmake_install_block(header_only, xmake_config))
+    lines.extend(_generate_xmake_install_block(build_tool, xmake_config, cmake_options, features))
     lines.append(_marker_end("install"))
     lines.append('    end)')
 
     return "\n".join(lines) + "\n"
+
+
+def _insert_configs_marker(content: str) -> str:
+    start = _marker_start("configs")
+    if start in content:
+        return content
+    versions_end = _marker_end("versions")
+    if versions_end not in content:
+        return content
+    idx = content.index(versions_end) + len(versions_end)
+    insertion = f"\n{start}\n{_marker_end('configs')}"
+    return content[:idx] + insertion + content[idx:]
+
+
+def _insert_on_load_block(content: str) -> str:
+    start = _marker_start("deps_and_defines")
+    if start in content:
+        return content
+    # Find on_install line to insert on_load right before it
+    needle = "    on_install(function"
+    if needle not in content:
+        return content
+    idx = content.index(needle)
+    block = (
+        "    on_load(function (package)\n"
+        f"{start}\n"
+        f"{_marker_end('deps_and_defines')}\n"
+        "    end)\n"
+    )
+    return content[:idx] + block + content[idx:]
 
 
 def update_xmake_lua(
@@ -492,14 +955,29 @@ def update_xmake_lua(
     dependencies: list | None = None,
     header_only: bool = False,
     xmake_config: dict | None = None,
+    build_tool: str | None = None,
+    cmake_options: list[str] | None = None,
+    features: dict | None = None,
+    default_features: list[str] | None = None,
 ) -> str:
-    sections = {
-        "versions": "\n".join(_generate_xmake_versions_block(versions, version_hashes)),
-        "deps": "\n".join(_generate_xmake_deps_block(dependencies or [])),
-        "install": "\n".join(_generate_xmake_install_block(header_only, xmake_config)),
-    }
+    if build_tool is None:
+        build_tool = "none" if header_only else "xmake"
+    features = features or {}
+    default_features = default_features or []
 
     result = existing_content
+    if features:
+        result = _insert_configs_marker(result)
+        result = _insert_on_load_block(result)
+
+    sections = {
+        "versions": "\n".join(_generate_xmake_versions_block(versions, version_hashes)),
+        "configs": "\n".join(_generate_xmake_configs_block(features, default_features)),
+        "deps": "\n".join(_generate_xmake_deps_block(dependencies or [])),
+        "deps_and_defines": "\n".join(_generate_xmake_deps_and_defines_block(features)),
+        "install": "\n".join(_generate_xmake_install_block(build_tool, xmake_config, cmake_options, features)),
+    }
+
     for section, new_content in sections.items():
         start = _marker_start(section)
         end = _marker_end(section)
@@ -553,10 +1031,32 @@ def generate_portfile_cmake(
     ref: str,
     header_only: bool = False,
     options: list[str] | None = None,
+    features: dict | None = None,
 ) -> str:
-    options_text = ""
-    if options:
+    features = features or {}
+
+    feature_check_block = ""
+    if features:
+        mappings = []
+        for fname, fdef in features.items():
+            opt = fdef.get("cmake-option") or _default_cmake_option_name(fname)
+            mappings.append(f"        {fname} {opt}")
+        feature_check_block = (
+            "\nvcpkg_check_features(OUT_FEATURE_OPTIONS FEATURE_OPTIONS\n"
+            "    FEATURES\n"
+            + "\n".join(mappings)
+            + "\n)\n"
+        )
+
+    if features:
+        options_lines = ["        ${FEATURE_OPTIONS}"]
+        if options:
+            options_lines.extend(f"        -D{opt}" for opt in options)
+        options_text = "\n    OPTIONS\n" + "\n".join(options_lines)
+    elif options:
         options_text = "\n    OPTIONS " + " ".join(f"-D{opt}" for opt in options)
+    else:
+        options_text = ""
 
     cleanup = ""
     if header_only:
@@ -570,8 +1070,7 @@ file(REMOVE_RECURSE
     OUT_SOURCE_PATH SOURCE_PATH
     URL https://github.com/{repo}.git
     REF {ref}
-)
-
+){feature_check_block}
 vcpkg_cmake_configure(
     SOURCE_PATH ${{SOURCE_PATH}}{options_text}
 )
@@ -583,14 +1082,33 @@ file(INSTALL "${{SOURCE_PATH}}/LICENSE" DESTINATION "${{CURRENT_PACKAGES_DIR}}/s
 """
 
 
+def _translate_dep_for_vcpkg(dep, owner_name: str):
+    if isinstance(dep, str):
+        return vcpkg_port_name(dep)
+    dep_name = dep["name"]
+    configs = dep.get("configs", {}) or {}
+    bool_features = [k for k, v in configs.items() if v is True]
+    non_bool = {k: v for k, v in configs.items() if not isinstance(v, bool)}
+    if non_bool:
+        print(
+            f"Warning: non-boolean configs on dep '{dep_name}' of '{owner_name}' cannot translate to vcpkg features and will be dropped: {non_bool}",
+            file=sys.stderr,
+        )
+    if bool_features:
+        return {"name": vcpkg_port_name(dep_name), "features": bool_features}
+    return vcpkg_port_name(dep_name)
+
+
 def generate_vcpkg_json(
     name: str,
     description: str,
     version_string: str,
-    dependencies: list[str] | None = None,
+    dependencies: list | None = None,
+    features: dict | None = None,
+    default_features: list[str] | None = None,
 ) -> dict:
     pname = vcpkg_port_name(name)
-    vcpkg_json = {
+    vcpkg_json: dict = {
         "name": pname,
         "version-string": version_string,
         "description": description,
@@ -600,8 +1118,21 @@ def generate_vcpkg_json(
         ],
     }
     for dep in (dependencies or []):
-        dep_name = dep if isinstance(dep, str) else dep["name"]
-        vcpkg_json["dependencies"].append(vcpkg_port_name(dep_name))
+        vcpkg_json["dependencies"].append(_translate_dep_for_vcpkg(dep, name))
+
+    features = features or {}
+    if features:
+        feat_block: dict = {}
+        for fname, fdef in features.items():
+            entry: dict = {"description": fdef.get("description", "")}
+            fdeps = fdef.get("dependencies", []) or []
+            if fdeps:
+                entry["dependencies"] = [_translate_dep_for_vcpkg(d, name) for d in fdeps]
+            feat_block[fname] = entry
+        vcpkg_json["features"] = feat_block
+        if default_features:
+            vcpkg_json["default-features"] = list(default_features)
+
     return vcpkg_json
 
 
@@ -678,6 +1209,7 @@ def generate(data: dict, root: Path, fetch_fn=None, commit: bool = True, overwri
     for name, pkg in packages.items():
         if only_package and name != only_package:
             continue
+        _migrate_pkg_in_place(pkg)
         registries = get_package_registries(pkg)
         repo = pkg["repo"]
         versions = pkg.get("versions", [])
@@ -685,7 +1217,10 @@ def generate(data: dict, root: Path, fetch_fn=None, commit: bool = True, overwri
         xmake_deps = common_deps + pkg.get("xmake-dependencies", [])
         vcpkg_deps = common_deps + pkg.get("vcpkg-dependencies", [])
         header_only = pkg.get("header-only", False)
-        options = pkg.get("options", [])
+        cmake_options = pkg.get("cmake-options", [])
+        build_tool = _get_build_tool(pkg)
+        features = pkg.get("features", {})
+        default_features = pkg.get("default-features", [])
 
         print(f"--- {name} ---")
 
@@ -699,12 +1234,15 @@ def generate(data: dict, root: Path, fetch_fn=None, commit: bool = True, overwri
             _generate_xmake(
                 root, name, repo, description, versions, xmake_deps,
                 header_only, fetch_fn, license_id, xmake_config, overwrite,
+                build_tool=build_tool, cmake_options=cmake_options,
+                features=features, default_features=default_features,
             )
 
         if "vcpkg" in registries:
             _generate_vcpkg(
                 root, name, repo, description, versions, vcpkg_deps,
-                header_only, options, fetch_fn, commit, working_dir, baseline_entries
+                header_only, cmake_options, fetch_fn, commit, working_dir, baseline_entries,
+                features=features, default_features=default_features,
             )
 
     # Write baseline (all vcpkg packages)
@@ -718,7 +1256,11 @@ def generate(data: dict, root: Path, fetch_fn=None, commit: bool = True, overwri
     _save_sha256_cache(root, sha256_cache)
 
 
-def _generate_xmake(root, name, repo, description, versions, dependencies, header_only, fetch_fn, license_id="", xmake_config=None, overwrite=False):
+def _generate_xmake(
+    root, name, repo, description, versions, dependencies, header_only,
+    fetch_fn, license_id="", xmake_config=None, overwrite=False,
+    build_tool=None, cmake_options=None, features=None, default_features=None,
+):
     version_hashes = {}
     for version in versions:
         sha256 = fetch_fn("tarball_sha256", repo=repo, version=version)
@@ -738,6 +1280,8 @@ def _generate_xmake(root, name, repo, description, versions, dependencies, heade
             existing, versions, version_hashes,
             dependencies=dependencies, header_only=header_only,
             xmake_config=xmake_config,
+            build_tool=build_tool, cmake_options=cmake_options,
+            features=features, default_features=default_features,
         )
         xmake_path.write_text(updated, encoding="utf-8")
         print(f"  xmake: updated {xmake_path}")
@@ -746,6 +1290,8 @@ def _generate_xmake(root, name, repo, description, versions, dependencies, heade
             name, repo, description, versions, version_hashes,
             dependencies=dependencies, header_only=header_only,
             license=license_id, xmake_config=xmake_config,
+            build_tool=build_tool, cmake_options=cmake_options,
+            features=features, default_features=default_features,
         )
         xmake_path.write_text(xmake_lua, encoding="utf-8")
         print(f"  xmake: wrote {xmake_path}")
@@ -753,8 +1299,19 @@ def _generate_xmake(root, name, repo, description, versions, dependencies, heade
 
 def _generate_vcpkg(
     root, name, repo, description, versions, dependencies,
-    header_only, options, fetch_fn, commit, working_dir, baseline_entries
+    header_only, options, fetch_fn, commit, working_dir, baseline_entries,
+    features=None, default_features=None,
 ):
+    if features:
+        boolean_features = {}
+        for fname, fdef in features.items():
+            if _feature_type(fdef) == "boolean":
+                boolean_features[fname] = fdef
+            else:
+                print(f"  vcpkg: skipping non-boolean feature '{fname}' (vcpkg features are strictly boolean)")
+        features = boolean_features
+        if default_features:
+            default_features = [f for f in default_features if f in features]
     if not versions:
         print(f"  vcpkg: no versions for '{name}', skipping")
         return
@@ -799,9 +1356,14 @@ def _generate_vcpkg(
 
     new_portfile = generate_portfile_cmake(
         repo, latest_info["sha"], header_only=header_only, options=options,
+        features=features,
     )
     new_vcpkg_json = json.dumps(
-        generate_vcpkg_json(name, description, latest_info["vs"], dependencies), indent=2
+        generate_vcpkg_json(
+            name, description, latest_info["vs"], dependencies,
+            features=features, default_features=default_features,
+        ),
+        indent=2,
     )
 
     old_portfile = portfile_path.read_text(encoding="utf-8") if portfile_path.exists() else ""
@@ -1128,6 +1690,12 @@ def build_parser() -> argparse.ArgumentParser:
         default="vcpkg,xmake",
         help="Comma-separated list of registries (default: vcpkg,xmake)",
     )
+    add_parser.add_argument("--header-only", action="store_true", help="Mark the package as header-only")
+    add_parser.add_argument(
+        "--build-tool",
+        choices=list(VALID_BUILD_TOOLS),
+        help="Upstream build tool (default: 'none' if --header-only, else 'xmake')",
+    )
 
     # remove
     rm_parser = subparsers.add_parser("remove", help="Remove a package from the registry.")
@@ -1158,6 +1726,7 @@ def build_parser() -> argparse.ArgumentParser:
     ad_parser.add_argument("dep", help="Dependency name")
     ad_parser.add_argument("configs", nargs="*", help="Config key=value pairs (e.g. filesystem=true)")
     ad_parser.add_argument("-v", "--version", dest="dep_version", help="Version constraint (e.g. 1.x, >=2.0)")
+    ad_parser.add_argument("--feature", help="Scope this dep to a feature instead of top-level")
     ad_group = ad_parser.add_mutually_exclusive_group()
     ad_group.add_argument("--xmake", action="store_true", help="Add as xmake-only dependency")
     ad_group.add_argument("--vcpkg", action="store_true", help="Add as vcpkg-only dependency")
@@ -1166,6 +1735,7 @@ def build_parser() -> argparse.ArgumentParser:
     rd_parser = subparsers.add_parser("remove-dep", help="Remove a dependency from a package.")
     rd_parser.add_argument("name", help="Package name")
     rd_parser.add_argument("dep", help="Dependency name to remove")
+    rd_parser.add_argument("--feature", help="Remove from a feature's deps instead of top-level")
     rd_group = rd_parser.add_mutually_exclusive_group()
     rd_group.add_argument("--xmake", action="store_true", help="Remove from xmake-only dependencies")
     rd_group.add_argument("--vcpkg", action="store_true", help="Remove from vcpkg-only dependencies")
@@ -1174,6 +1744,74 @@ def build_parser() -> argparse.ArgumentParser:
     sc_parser = subparsers.add_parser("set-config", help="Set xmake-config values for a package.")
     sc_parser.add_argument("name", help="Package name")
     sc_parser.add_argument("values", nargs="+", help="Config key=value pairs (e.g. build_tests=false)")
+
+    # add-feature
+    af_parser = subparsers.add_parser("add-feature", help="Declare a feature on a package.")
+    af_parser.add_argument("name", help="Package name")
+    af_parser.add_argument("feature", help="Feature name (e.g. ssl)")
+    af_parser.add_argument("--description", default="", help="Feature description")
+    af_parser.add_argument(
+        "--type", dest="ftype", default="boolean", choices=["boolean", "string"],
+        help="Feature type (default: boolean). String features are xmake-only.",
+    )
+    af_parser.add_argument(
+        "--default", dest="default_value",
+        help="Default value (required for --type string)",
+    )
+    af_parser.add_argument(
+        "--value", dest="values", action="append", default=[],
+        help="Allowed value (repeatable, --type string only). Omit to allow any string.",
+    )
+    af_parser.add_argument("--cmake-option", help="Upstream CMake option name (default: UPPER_CASE feature name)")
+    af_parser.add_argument("--xmake-config", help="Upstream xmake config name (default: feature name with hyphens -> underscores)")
+
+    # remove-feature
+    rf_parser = subparsers.add_parser("remove-feature", help="Remove a feature (and its scoped deps + defines).")
+    rf_parser.add_argument("name", help="Package name")
+    rf_parser.add_argument("feature", help="Feature name to remove")
+
+    # set-feature
+    sf_parser = subparsers.add_parser("set-feature", help="Update a feature's metadata.")
+    sf_parser.add_argument("name", help="Package name")
+    sf_parser.add_argument("feature", help="Feature name")
+    sf_parser.add_argument("--description", help="Feature description")
+    sf_parser.add_argument("--cmake-option", help="Upstream CMake option name")
+    sf_parser.add_argument("--xmake-config", help="Upstream xmake config name")
+    sf_parser.add_argument("--default", dest="default_value", help="Default value (string features only)")
+    sf_parser.add_argument(
+        "--value", dest="values", action="append", default=[],
+        help="Replace the allowed-values list (string features only, repeatable)",
+    )
+
+    # add-define
+    adef_parser = subparsers.add_parser("add-define", help="Add a consumer-side preprocessor define to a feature.")
+    adef_parser.add_argument("name", help="Package name")
+    adef_parser.add_argument("feature", help="Feature name")
+    adef_parser.add_argument("macro", help="Macro name (e.g. MYLIB_SSL_SUPPORT)")
+
+    # remove-define
+    rdef_parser = subparsers.add_parser("remove-define", help="Remove a define from a feature.")
+    rdef_parser.add_argument("name", help="Package name")
+    rdef_parser.add_argument("feature", help="Feature name")
+    rdef_parser.add_argument("macro", help="Macro name to remove")
+
+    # set-default-features
+    sdf_parser = subparsers.add_parser("set-default-features", help="Replace the list of default-on features.")
+    sdf_parser.add_argument("name", help="Package name")
+    sdf_parser.add_argument(
+        "-f", "--feature", dest="features", action="append", default=[],
+        help="Feature name (repeatable). Omit all to clear the list.",
+    )
+
+    # set-build-tool
+    sbt_parser = subparsers.add_parser("set-build-tool", help="Set the upstream build tool for a package.")
+    sbt_parser.add_argument("name", help="Package name")
+    sbt_parser.add_argument("build_tool", choices=list(VALID_BUILD_TOOLS), help="Build tool")
+
+    # set-cmake-option
+    sco_parser = subparsers.add_parser("set-cmake-option", help="Set an always-on CMake -D flag.")
+    sco_parser.add_argument("name", help="Package name")
+    sco_parser.add_argument("value", help="KEY=VALUE (e.g. BUILD_TESTS=OFF)")
 
     # readme
     readme_parser = subparsers.add_parser("readme", help="Generate a README snippet for consumers of this registry.")
@@ -1251,7 +1889,10 @@ def main(argv: list[str] | None = None):
             if r not in VALID_REGISTRIES:
                 print(f"Invalid registry: '{r}'. Valid options: {', '.join(VALID_REGISTRIES)}", file=sys.stderr)
                 sys.exit(1)
-        add_package(data, args.name, args.repo, branch=args.branch, registries=registries)
+        add_package(
+            data, args.name, args.repo, branch=args.branch, registries=registries,
+            header_only=args.header_only, build_tool=args.build_tool,
+        )
 
     elif args.command == "remove":
         remove_package(data, args.name)
@@ -1281,16 +1922,62 @@ def main(argv: list[str] | None = None):
             k, v = parse_kv_pair(pair)
             configs[k] = v
         reg = "xmake" if args.xmake else ("vcpkg" if args.vcpkg else None)
-        add_dependency(data, args.name, args.dep, configs=configs or None, registry=reg, version=args.dep_version)
+        add_dependency(
+            data, args.name, args.dep, configs=configs or None, registry=reg,
+            version=args.dep_version, feature=args.feature,
+        )
 
     elif args.command == "remove-dep":
         reg = "xmake" if args.xmake else ("vcpkg" if args.vcpkg else None)
-        remove_dependency(data, args.name, args.dep, registry=reg)
+        remove_dependency(data, args.name, args.dep, registry=reg, feature=args.feature)
 
     elif args.command == "set-config":
         for pair in args.values:
             k, v = parse_kv_pair(pair)
             set_config(data, args.name, k, v)
+
+    elif args.command == "add-feature":
+        add_feature(
+            data, args.name, args.feature,
+            description=args.description,
+            cmake_option=args.cmake_option,
+            xmake_config=args.xmake_config,
+            type_=args.ftype,
+            default=args.default_value,
+            values=args.values or None,
+        )
+
+    elif args.command == "remove-feature":
+        remove_feature(data, args.name, args.feature)
+
+    elif args.command == "set-feature":
+        set_feature(
+            data, args.name, args.feature,
+            description=args.description,
+            cmake_option=args.cmake_option,
+            xmake_config=args.xmake_config,
+            default=args.default_value,
+            values=args.values or None,
+        )
+
+    elif args.command == "add-define":
+        add_define(data, args.name, args.feature, args.macro)
+
+    elif args.command == "remove-define":
+        remove_define(data, args.name, args.feature, args.macro)
+
+    elif args.command == "set-default-features":
+        set_default_features(data, args.name, args.features)
+
+    elif args.command == "set-build-tool":
+        set_build_tool(data, args.name, args.build_tool)
+
+    elif args.command == "set-cmake-option":
+        if "=" not in args.value:
+            print("set-cmake-option requires KEY=VALUE.", file=sys.stderr)
+            sys.exit(1)
+        key, val = args.value.split("=", 1)
+        set_cmake_option(data, args.name, key, val)
 
     save_registry(registry_path, data)
 
