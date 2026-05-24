@@ -1,6 +1,6 @@
 {
   "name": "collab-core",
-  "version-string": "2026-05-17-4feb6fa",
+  "version-string": "2026-05-24-a16ab8b",
   "description": "\u26a1 Core library for Collab projects",
   "dependencies": [
     {
