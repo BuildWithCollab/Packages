@@ -1,6 +1,6 @@
 {
   "name": "dotenv",
-  "version-string": "2026-04-07-d4ad2d7",
+  "version-string": "2026-05-24-186d7a3",
   "description": ".env library and CLI \ud83d\udd27",
   "dependencies": [
     {
@@ -11,7 +11,6 @@
       "name": "vcpkg-cmake-config",
       "host": true
     },
-    "collab-core",
     "nlohmann-json",
     "yaml-cpp"
   ]
