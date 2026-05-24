@@ -26,6 +26,13 @@ package("collab-core")
     on_load(function (package)
 -- [[ GENERATED:deps_and_defines ]]
 -- [[ /GENERATED:deps_and_defines ]]
+        if package:config("header_only") then
+            package:add("deps","fmt", { configs = { header_only = true } })
+        else
+            package:add("deps","fmt")
+            package:add("deps","spdlog")
+            package:add("deps","rang")
+        end
     end)
     on_install(function (package)
 -- [[ GENERATED:install ]]
