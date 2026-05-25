@@ -17,6 +17,7 @@ package("collab-core")
     add_versions("v1.0.0", "9c59ff633ac683af6eb3fafbddab01b10137fe50586c5be0023d7533f5522d4c")
     add_versions("v1.0.2", "df53e0b89c75c59c968ad538dbd7c8f3b0115b42d18a1ba0bcd455c541c75a18")
     add_versions("v1.0.3", "c948c06af5da20fcb1bc936c6152c208f7a449b5c6ea5df86bea31aa3ad6a84b")
+    add_versions("v1.1.0", "b87a0ad0f39b5078cadcb42ce6b2e71e0c79eb5ca3dfd78e1a3555efa844548c")
 -- [[ /GENERATED:versions ]]
 -- [[ GENERATED:configs ]]
     add_configs("header_only", { description = "Install header-only library", default = false, type = "boolean" })
