@@ -206,7 +206,9 @@
         "unordered_dense",
         "magic_enum",
         "nameof",
-        "nlohmann_json"
+        "nlohmann_json",
+        "toml11",
+        "yaml-cpp"
       ],
       "xmake-config": {
         "build_tests": false,

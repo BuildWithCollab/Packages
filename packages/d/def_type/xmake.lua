@@ -22,6 +22,8 @@ package("def_type")
     add_deps("magic_enum")
     add_deps("nameof")
     add_deps("nlohmann_json")
+    add_deps("toml11")
+    add_deps("yaml-cpp")
 -- [[ /GENERATED:deps ]]
 
     add_configs("enable_pfr", { description = "Enable PFR backend", default = true, type = "boolean" })
