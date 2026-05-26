@@ -9,6 +9,9 @@ package("collab-platform")
 -- [[ GENERATED:deps ]]
     add_deps("collab-core")
 -- [[ /GENERATED:deps ]]
+    if is_plat("windows") then
+        add_syslinks("shell32", "ole32")   -- folders_impl.cpp → SHGetKnownFolderPath, CoTaskMemFree
+    end
     on_install(function (package)
 -- [[ GENERATED:install ]]
         import("package.tools.xmake").install(package)
