@@ -253,6 +253,18 @@
       "dependencies": [
         "fmt"
       ]
+    },
+    "collab-platform": {
+      "repo": "BuildWithCollab/collab-platform",
+      "registries": [
+        "xmake"
+      ],
+      "dependencies": [
+        "collab-core"
+      ],
+      "versions": [
+        "v0.1.0"
+      ]
     }
   }
 }
