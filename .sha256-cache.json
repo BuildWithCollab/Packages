@@ -53,5 +53,6 @@
   "BuildWithCollab/collab-process@v2.2.1": "83f529a2dd89de5c20221551cd4549563417451b30e1b2e16bd66260b4691740",
   "BuildWithCollab/collab-core@v1.1.0": "b87a0ad0f39b5078cadcb42ce6b2e71e0c79eb5ca3dfd78e1a3555efa844548c",
   "BuildWithCollab/collab-platform@v0.1.0": "927de311b7fcbf2ffb5a9e06bf92a2c8f674d4856d74aa77e4db2242ef1fd3e8",
-  "BuildWithCollab/def_type@v1.6.0": "7e1c1fd1b1193ea6d363d89bfed82a5e127f40c83ec58b2faa5e9ebfacf1e64e"
+  "BuildWithCollab/def_type@v1.6.0": "7e1c1fd1b1193ea6d363d89bfed82a5e127f40c83ec58b2faa5e9ebfacf1e64e",
+  "BuildWithCollab/def_type@v1.6.1": "324de025d4ab4a86d1f3cf6511b8198eb14d96f4d2138d013f3af5a84b986cf8"
 }
